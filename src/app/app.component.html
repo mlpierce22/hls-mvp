@@ -1,8 +1,17 @@
 
 <div class="app-container">
   <div class="intro">Sample MVP app for camio to test HLS streaming</div>
+  <div class="button-container">
+    <button class="add-new" (click)="addStream()">Add Random Stream</button>
+    <button class="delete-selected" (click)="deleteStreams()">Delete Selected Streams</button>
+  </div>
+
   <div class="live-tiles">
-    <video class="video" id="live-stream-{{stream.id}}" *ngFor="let stream of liveStreams" [style.height.px]="height" [style.width.px]="width" autoPlay>
-    </video>
+    <div class="video-container" *ngFor="let stream of liveStreams; index as i">
+      <video class="video" (click)="toggleHighlight(i)" [ngClass]="{'selected': stream.selected}"id="live-stream-{{stream.id}}" [style.height.px]="height" [style.width.px]="width" autoPlay>
+      </video>
+      <div class="selected" (click)="toggleHighlight(stream.id)" *ngIf="stream.selected">
+      </div>
+    </div>
   </div>
 </div> 

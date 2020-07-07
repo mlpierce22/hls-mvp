@@ -6,12 +6,12 @@ import Hls from 'hls.js'
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
  
   width: number = 250;
   height: number = 200;
 
-  liveStreams: Array<{}> = new Array<{}>();
+  liveStreams: Array<{id: number, url: string, selected: boolean}> = new Array<{id: number, url: string, selected: boolean}>();
 
   liveStreamURLs = [
     "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
@@ -24,33 +24,52 @@ export class AppComponent implements AfterViewInit {
     for (let i = 0; i < 16; i++) {
       const randNum = Math.floor(Math.random() * this.liveStreamURLs.length - 1) + 1
       let url = this.liveStreamURLs[randNum]
-      this.liveStreams.push({ id: i, url})
+      this.liveStreams.push({ id: i, url, selected: false})
     }
-  }
 
-  ngAfterViewInit(): void {
     this.liveStreams.forEach((stream: any) => this.setupHls(stream.url, stream.id))
   }
 
-  setupHls(manifestURL, id) {
-    let video = document.getElementById("live-stream-" + id) as HTMLVideoElement
-    video.muted = true
-    video.controls = false
-    video.loop = true
-    if (Hls.isSupported()) {
-      let hls = new Hls();
-      hls.attachMedia(video)
-      hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-        console.log("url:", manifestURL, id)
-        hls.loadSource(manifestURL);
-        hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-          console.log(data)
-        });
-      })
-    }
-    else if (video.canPlayType('application/vnd.apple.mpegurl'))
-    {
-      video.src = manifestURL
-    }
+  async setupHls(manifestURL, id) {
+    let exists = setInterval(function() {
+      if (document.getElementById("live-stream-" + id)) {
+         clearInterval(exists);
+         let video = document.getElementById("live-stream-" + id) as HTMLVideoElement
+          video.muted = true
+          video.controls = false
+          video.loop = true
+          if (Hls.isSupported()) {
+            let hls = new Hls();
+            hls.attachMedia(video)
+            hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              hls.loadSource(manifestURL);
+              hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+                //console.log(data)
+              });
+            })
+          }
+          else if (video.canPlayType('application/vnd.apple.mpegurl'))
+          {
+            video.src = manifestURL
+          }
+      }
+   }, 100);
+    
+  }
+
+  toggleHighlight(index) {
+    this.liveStreams[index].selected = !this.liveStreams[index].selected
+  }
+
+  deleteStreams() {
+    let tempStream = this.liveStreams.filter(stream => !stream.selected);
+    this.liveStreams = tempStream;
+  }
+
+  addStream() {
+    const randNum = Math.floor(Math.random() * this.liveStreamURLs.length - 1) + 1
+    let url = this.liveStreamURLs[randNum]
+    this.liveStreams.push({ id: this.liveStreams.length, url, selected: false})
+    this.setupHls(url, this.liveStreams.length - 1) 
   }
 }
