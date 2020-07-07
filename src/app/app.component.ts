@@ -14,21 +14,17 @@ export class AppComponent implements AfterViewInit {
   liveStreams: Array<{}> = new Array<{}>();
 
   liveStreamURLs = [
-    "http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8",
-    "http://sample.vodobox.com/pipe_dream_tahiti/pipe_dream_tahiti.m3u8",
-    "http://sample.vodobox.com/we_are_blood_4k/we_are_blood_4k.m3u8",
-    "http://sample.vodobox.com/caminandes_1_4k/caminandes_1_4k.m3u8",
-    "http://sample.vodobox.com/big_buck_bunny_4k/big_buck_bunny_4k.m3u8",
-    "http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8",
-    "http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8",
+    "https://b028.wpc.azureedge.net/80B028/SampleStream/595d6b9a-d98e-4381-86a3-cb93664479c2/b722b983-af65-4bb3-950a-18dded2b7c9b.ism/Manifest(format=m3u8-aapl-v3)",
+    "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
+    "https://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8",
+    "https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8",
+    "https://b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest(format=m3u8-aapl-v3)",
   ]
   
   ngOnInit(): void {
     for (let i = 0; i < 16; i++) {
       const randNum = Math.floor(Math.random() * this.liveStreamURLs.length - 1) + 1
-      console.log("rand num: ", randNum)
       let url = this.liveStreamURLs[randNum]
-      console.log("url", url)
       this.liveStreams.push({ id: i, url})
     }
   }
