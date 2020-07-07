@@ -1,6 +1,8 @@
 
 <div class="app-container">
   <div class="intro">Sample MVP app for camio to test HLS streaming</div>
-  <video id="live-stream" [style.height.px]="height" [style.width.px]="width" controls>
-  </video>
+  <div class="live-tiles">
+    <video class="video" id="live-stream-{{stream.id}}" *ngFor="let stream of liveStreams" [style.height.px]="height" [style.width.px]="width" autoPlay>
+    </video>
+  </div>
 </div> 
