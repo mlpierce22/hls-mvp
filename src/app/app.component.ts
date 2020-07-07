@@ -14,7 +14,6 @@ export class AppComponent implements AfterViewInit {
   liveStreams: Array<{}> = new Array<{}>();
 
   liveStreamURLs = [
-    "https://b028.wpc.azureedge.net/80B028/SampleStream/595d6b9a-d98e-4381-86a3-cb93664479c2/b722b983-af65-4bb3-950a-18dded2b7c9b.ism/Manifest(format=m3u8-aapl-v3)",
     "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
     "https://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8",
     "https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8",
