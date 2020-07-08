@@ -1,0 +1,15 @@
+.video-container {
+  margin: 0 30px;
+
+  .video {
+    &:hover {
+      transition: .3s;
+      box-shadow: 0 0 11px rgba(33,33,33,.2); 
+      cursor: pointer;
+    }
+
+    &.selected {
+      background: rgba(#0059fd, .5);
+    }
+  }
+}
