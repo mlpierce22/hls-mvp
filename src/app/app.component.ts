@@ -38,11 +38,15 @@ export class AppComponent implements OnDestroy {
 
     this.liveStreams$ = this.fss.fetch().pipe(
       map((streamUrls) => {
-        return streamUrls.map((url, index) => {
+        return streamUrls.map((metaData, index) => {
           return {
-            manifestUrl: url,
+            manifestUrl: metaData.manifestUrl,
+            online: metaData.online,
+            cameraName: metaData.cameraName,
+            timeStamp: metaData.timeStamp,
+            labels: metaData.labels,
             id: index,
-            isFocused: false
+            isFocused: false,
           };
         });
       })
