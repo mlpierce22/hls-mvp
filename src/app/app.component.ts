@@ -1,38 +1,89 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, AfterViewInit, OnDestroy } from "@angular/core";
+import { Subject, Observable, BehaviorSubject, fromEvent } from "rxjs";
+import { map, takeUntil, withLatestFrom, distinctUntilChanged, tap, startWith, pairwise } from "rxjs/operators";
+import { FetchStreamService } from "./fetch-stream.service";
+import { LiveStream, VideoDimensions } from "./app.models";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnDestroy {
- 
+
   width: number = 250;
   height: number = 200;
 
   /** Destroy observables so no leaks. */
   unsubscribe$: Subject<void> = new Subject<void>();
 
+  /** Constructed LiveStream Object */
+  liveStreams$: Observable<LiveStream[]> = new Observable<LiveStream[]>();
 
-  liveStreams: Array<{id: number, url: string, selected: boolean}> = new Array<{id: number, url: string, selected: boolean}>();
+  /** The live stream used to  */
+  focusedStream$: Observable<LiveStream> = new Observable<LiveStream>(null);
 
-  liveStreamURLs = [
-    "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
-    "https://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8",
-    "https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8",
-    "https://b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest(format=m3u8-aapl-v3)",
-  ]
-  
+  /** The index of the selected Stream */
+  selectedStreamIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+
+
+  // --------------- OPTIONS ---------------
+  /** The size of the focused stream. */
+  focusedStreamDim$: BehaviorSubject<VideoDimensions> = new BehaviorSubject<VideoDimensions>({ width: 1067, height: 600});
+
+  /** The size of the listed streams */
+  listedStreamDim$: BehaviorSubject<VideoDimensions> = new BehaviorSubject<VideoDimensions>({ width: 456, height: 267});
+
+  constructor(public fss: FetchStreamService) {
+
+    this.liveStreams$ = this.fss.fetch().pipe(
+      map((streamUrls) => {
+        return streamUrls.map((url, index) => {
+          return {
+            manifestUrl: url,
+            id: index,
+            isFocused: false
+          };
+        });
+      })
+    );
+
+    this.focusedStream$ = this.selectedStreamIndex$
+    .pipe(
+      startWith(null),
+      distinctUntilChanged(),
+      pairwise(),
+      withLatestFrom(this.liveStreams$), 
+      map(([[prevIndex, currIndex], streams]) => {
+        console.log("advanced index from " + prevIndex + " to " + currIndex)
+        
+        if (currIndex !== null) {
+          streams[currIndex].isFocused = true
+          if (prevIndex !== null) {
+            streams[prevIndex].isFocused = false
+          }
+          return streams[currIndex]
+        }
+        else {
+          return null
+        }
+      }),
+      takeUntil(this.unsubscribe$)
+    )
+  }
+
   ngOnInit(): void {
-    // for (let i = 0; i < 16; i++) {
-    //   const randNum = Math.floor(Math.random() * this.liveStreamURLs.length - 1) + 1
-    //   let url = this.liveStreamURLs[randNum]
-    //   this.liveStreams.push({ id: i, url, selected: false})
-    // }
+    fromEvent(window, 'resize').pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+        const focusedWidth = window.innerWidth * .74
+        const focusedHeight = focusedWidth * .56
+        this.focusedStreamDim$.next({width: focusedWidth, height: focusedHeight})
 
-
-    //this.liveStreams.forEach((stream: any) => this.setupHls(stream.url, stream.id))
+        if (window.innerWidth < 500) {
+          const listedWidth = window.innerWidth * .7
+          const listedHeight = focusedWidth * .56
+          this.listedStreamDim$.next({width: listedWidth, height: listedHeight})
+        }
+    })
   }
 
   ngOnDestroy(): void {
@@ -57,6 +108,6 @@ export class AppComponent implements OnDestroy {
   //   const randNum = Math.floor(Math.random() * this.liveStreamURLs.length - 1) + 1
   //   let url = this.liveStreamURLs[randNum]
   //   this.liveStreams.push({ id: this.liveStreams.length, url, selected: false})
-  //   this.setupHls(url, this.liveStreams.length - 1) 
+  //   this.setupHls(url, this.liveStreams.length - 1)
   // }
 }
