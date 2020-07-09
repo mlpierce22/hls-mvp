@@ -1,3 +1,5 @@
 <div class="live-tiles">
-  <app-stream></app-stream>
+  <div class="video-container" *ngFor="let stream of liveStreams; index as i">
+    <app-stream [stream]="stream" [streamDim]="listedStreamDim" (selectVideo)="selectVideo.emit(i)"></app-stream>
+  </div>
 </div>
