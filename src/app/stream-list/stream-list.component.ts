@@ -14,6 +14,8 @@ export class StreamListComponent implements OnInit {
 
   @Output() selectVideo: EventEmitter<number> = new EventEmitter<number>();
 
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
+
   constructor() { }
 
   ngOnInit() {

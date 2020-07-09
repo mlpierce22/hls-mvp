@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { LiveStream, VideoDimensions } from 'src/app/app.models';
 import { Subject } from 'rxjs';
-import { SetupHlsService } from './setup-hls.service';
 import Hls from 'hls.js'
 
 @Component({
@@ -17,8 +16,10 @@ export class StreamComponent implements OnInit, OnChanges {
 
   @Output() selectVideo: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(public hls: SetupHlsService) { }
+
+  constructor() { }
 
   ngOnInit() {
     this.setupHls(this.stream)
@@ -29,7 +30,7 @@ export class StreamComponent implements OnInit, OnChanges {
     //   }
     // })
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     if (!changes.firstChange) {
