@@ -1,6 +1,10 @@
 export interface LiveStream {
   id: number;
-  manifestUrl: string;
+  manifestUrl: string
+  online: boolean,
+  cameraName: string
+  timeStamp: number
+  labels: Array<string>
   isFocused: boolean;
 }
 
