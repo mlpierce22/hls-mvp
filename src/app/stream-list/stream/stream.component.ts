@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { LiveStream, VideoDimensions } from 'src/app/app.models';
+import { Subject } from 'rxjs';
+import { SetupHlsService } from './setup-hls.service';
 import Hls from 'hls.js'
 
 @Component({
@@ -6,18 +9,40 @@ import Hls from 'hls.js'
   templateUrl: './stream.component.html',
   styleUrls: ['./stream.component.scss']
 })
-export class StreamComponent implements OnInit {
+export class StreamComponent implements OnInit, OnChanges {
 
-  constructor() { }
+  @Input() stream: LiveStream;
+
+  @Input() streamDim: VideoDimensions;
+
+  @Output() selectVideo: EventEmitter<void> = new EventEmitter<void>();
+
+
+  constructor(public hls: SetupHlsService) { }
 
   ngOnInit() {
+    this.setupHls(this.stream)
+    //this.hls.setupHls(this.stream)
+    // this.changeOfFocus$.subscribe(val => {
+    //   if (val !== null) {
+    //     this.setupHls(this.stream)
+    //   }
+    // })
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    if (!changes.firstChange) {
+      this.setupHls(this.stream)
+    }
+    
   }
 
-  setupHls(manifestURL, id) {
+  setupHls(stream: LiveStream) {
     let exists = setInterval(function() {
-    if (document.getElementById("live-stream-" + id)) {
+    if (stream && document.getElementById("live-stream-" + stream.id)) {
       clearInterval(exists);
-      let video = document.getElementById("live-stream-" + id) as HTMLVideoElement
+      let video = document.getElementById("live-stream-" + stream.id) as HTMLVideoElement
       if (Hls.isSupported()) {
         let hls = new Hls();
         let retries = { network: 0, media: 0 }
@@ -47,7 +72,7 @@ export class StreamComponent implements OnInit {
           video.muted = true
           video.controls = false
           video.loop = true
-          hls.loadSource(manifestURL);
+          hls.loadSource(stream.manifestUrl);
           hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             //console.log(data)
           });
@@ -55,11 +80,10 @@ export class StreamComponent implements OnInit {
       }
       else if (video.canPlayType('application/vnd.apple.mpegurl'))
       {
-        video.src = manifestURL
+        video.src = stream.manifestUrl
       }
     }
    }, 100);
     
   }
-
 }

@@ -1,4 +1,3 @@
-<div class="video-container" *ngFor="let stream of liveStreams; index as i">
-  <video class="video" (click)="toggleHighlight(i)" [ngClass]="{'selected': stream.selected}"id="live-stream-{{stream.id}}" [style.height.px]="height" [style.width.px]="width" autoPlay>
-  </video>
-</div>
+<video class="video" (click)="selectVideo.emit()" *ngIf="stream"
+  id="live-stream-{{stream.id}}" [style.height.px]="streamDim.height" [style.width.px]="streamDim.width" autoPlay>
+</video>
