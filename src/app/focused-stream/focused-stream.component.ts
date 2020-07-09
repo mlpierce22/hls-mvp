@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { LiveStream, VideoDimensions } from '../app.models';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-focused-stream',
@@ -6,6 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./focused-stream.component.scss']
 })
 export class FocusedStreamComponent implements OnInit {
+
+  /** The big stream the user is focused on. */
+  @Input() focusedStream: LiveStream;
+
+  @Input() focusedStreamDim: VideoDimensions;
+
 
   constructor() { }
 
