@@ -1,5 +1,6 @@
 export interface LiveStream {
   id: number;
+  currentIndex: number
   manifestUrl: string
   online: boolean,
   cameraName: string
