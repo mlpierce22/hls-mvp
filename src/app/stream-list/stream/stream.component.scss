@@ -1,21 +1,26 @@
 .video-container {
-  .video {
-    &:hover {
-      transition: 0.3s;
-      box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
-      cursor: pointer;
-    }
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &.show-border {
+    transition: 0.3s;
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    cursor: pointer;
   }
   
   .bottom-metadata {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    margin-top: 5px;
     
     .text {
       padding: 2px 5px;
       border-radius: 4px;
       align-self: center;
-      margin: 0 5px;
+      margin-right: 5px;
 
       &.online {
         background-color: #3AC162;
@@ -34,7 +39,7 @@
       margin-right: 5px;
 
       .dropdown-btn {
-        
+        cursor: pointer;
 
       }
 
@@ -67,17 +72,19 @@
 
     .time {
       align-self: center;
-
     }
 
     .rewind {
       margin-left: auto;
+      cursor: pointer;
+
       .rewind-icon {
       }
     }
 
     .checkbox {
       margin-left: 5px;
+      cursor: pointer;
     }
 
   }

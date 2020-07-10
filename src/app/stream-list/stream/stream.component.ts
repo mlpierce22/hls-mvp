@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { LiveStream, VideoDimensions } from 'src/app/app.models';
 import { Subject } from 'rxjs';
 import Hls from 'hls.js'
@@ -26,25 +26,22 @@ export class StreamComponent implements OnInit, OnChanges {
   
   isDropdown: boolean = false;
 
-  constructor() { }
+  showBorder: boolean = false;
+
+  constructor(public cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.setupHls(this.stream)
-    //this.hls.setupHls(this.stream)
-    // this.changeOfFocus$.subscribe(val => {
-    //   if (val !== null) {
-    //     this.setupHls(this.stream)
-    //   }
-    // })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    console.log(changes)
-    if (!changes.firstChange) {
+    // on the first time
+    if (changes['stream'].firstChange) {
       this.setupHls(this.stream)
     }
-    
+    if (!!changes['stream'].previousValue && changes['stream'].currentValue['manifestUrl'] !== changes['stream'].previousValue['manifestUrl']){
+      this.setupHls(this.stream)
+    }
   }
 
   toggleDropdown() {
