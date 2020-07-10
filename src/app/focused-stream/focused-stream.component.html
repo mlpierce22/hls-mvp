@@ -1,2 +1,5 @@
-<app-stream [stream]="focusedStream" [streamDim]="focusedStreamDim"></app-stream>
-<app-stream-buttons></app-stream-buttons>
+<div class="focused-stream-container" [@slideInOut]>
+  <app-stream [stream]="liveStreams[focusedStreamIndex]" [streamDim]="focusedStreamDim" [isSelected]="liveStreams[focusedStreamIndex].isSelected" (toggleVideoSelect)="toggleVideoSelect.emit(focusedStreamIndex)" (search)="search.emit($event)"></app-stream>
+  <app-stream-buttons></app-stream-buttons>
+</div>
+
