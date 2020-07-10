@@ -9,6 +9,7 @@ import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-b
 import { ClickOutsideDirective } from './stream-list/stream/click-outside.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

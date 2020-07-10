@@ -1,9 +1,9 @@
 <div class="button-row">
-  <button mat-stroked-button class="start-stream">Start Stream</button>
-  <button mat-stroked-button class="stop-stream">Stop Stream</button>
-  <button mat-stroked-button class="zones">Zones</button>
-  <button mat-stroked-button class="search"><img src="https://icongr.am/material/magnify.svg?size=20&color=000000"></button>
+  <button mat-stroked-button matTooltip="Open the live video stream connection to this camera." class="start-stream">Start Stream</button>
+  <button mat-stroked-button matTooltip="Terminate the live video stream connection to this camera." class="stop-stream">Stop Stream</button>
+  <button mat-stroked-button matTooltip="Edit zones of this camera." class="zones">Zones</button>
+  <button mat-stroked-button matTooltip="Search this camera's history." class="search"><img src="https://icongr.am/material/magnify.svg?size=20&color=000000"></button>
   <button mat-raised-button [disabled]="'true'" class="settings"><img src="https://icongr.am/material/cog.svg?size=20&color=000000"></button>
-  <button mat-stroked-button class="full-screen"><img src="https://icongr.am/material/arrow-expand-all.svg?size=20&color=000000"></button>
-  <button mat-stroked-button class="share"><img src="https://icongr.am/entypo/share-alternative.svg?size=19&color=000000"></button>
+  <button mat-stroked-button matTooltip="Open full screen." class="full-screen"><img src="https://icongr.am/material/arrow-expand-all.svg?size=20&color=000000"></button>
+  <button mat-stroked-button matTooltip="Search this camera via link." class="share"><img src="https://icongr.am/entypo/share-alternative.svg?size=19&color=000000"></button>
 </div>

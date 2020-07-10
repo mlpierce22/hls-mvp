@@ -30,5 +30,8 @@ $camio-hls-mvp-theme: mat-light-theme($camio-hls-mvp-primary, $camio-hls-mvp-acc
 body {
   margin: 0;
 }
+.mat-tooltip {
+  font-size: 13px;
+}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
