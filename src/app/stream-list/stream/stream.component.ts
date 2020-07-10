@@ -14,10 +14,17 @@ export class StreamComponent implements OnInit, OnChanges {
 
   @Input() streamDim: VideoDimensions;
 
-  @Output() selectVideo: EventEmitter<void> = new EventEmitter<void>();
+  @Input() isSelected: boolean;
+
+  @Output() focusVideo: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
+  @Output() toggleVideoSelect: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() rewind: EventEmitter<void> = new EventEmitter<void>();
+  
+  isDropdown: boolean = false;
 
   constructor() { }
 
@@ -33,10 +40,30 @@ export class StreamComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    console.log(changes)
     if (!changes.firstChange) {
       this.setupHls(this.stream)
     }
     
+  }
+
+  toggleDropdown() {
+    this.isDropdown = !this.isDropdown
+  }
+
+  rewindVideo() {
+    console.log("rewinding 15 minutes")
+    this.rewind.emit()
+  }
+
+  isTagSelected() {
+    let color;
+    if (this.stream.isSelected) {
+      color = "0a59f3" // blue
+    } else {
+      color = "636363" // gray
+    }
+    return "https://icongr.am/material/tag-multiple.svg?size=30&color=" + color
   }
 
   setupHls(stream: LiveStream) {

@@ -6,6 +6,7 @@ export interface LiveStream {
   timeStamp: number
   labels: Array<string>
   isFocused: boolean;
+  isSelected: boolean;
 }
 
 export interface VideoDimensions {

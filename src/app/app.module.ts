@@ -6,6 +6,7 @@ import { StreamListComponent } from './stream-list/stream-list.component';
 import { StreamComponent } from './stream-list/stream/stream.component';
 import { FocusedStreamComponent } from './focused-stream/focused-stream.component';
 import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
+import { ClickOutsideDirective } from './stream-list/stream/click-outside.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-b
     StreamListComponent,
     StreamComponent,
     FocusedStreamComponent,
-    StreamButtonsComponent
+    StreamButtonsComponent,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule

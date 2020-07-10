@@ -1,7 +1,7 @@
 
 <div class="app-container">
-  <app-focused-stream *ngIf="focusedStream$ | async as focusedStream" [focusedStream]="focusedStream" [focusedStreamDim]="focusedStreamDim$ | async"></app-focused-stream>
-  <app-stream-list [liveStreams]="liveStreams$ | async" [listedStreamDim]="listedStreamDim$ | async" (selectVideo)="selectedStreamIndex$.next($event)"></app-stream-list>
+  <app-focused-stream *ngIf="focusedStream$ | async as focusedStream" [focusedStream]="focusedStream" [focusedStreamDim]="focusedStreamDim$ | async" (search)="search$.next($event)"></app-focused-stream>
+  <app-stream-list [liveStreams]="liveStreams$ | async" [listedStreamDim]="listedStreamDim$ | async" (focusVideo)="focusedStreamIndex$.next($event)" (search)="search$.next($event)" (toggleVideoSelect)="toggleVideoSelect$.next($event)"></app-stream-list>
 
   <!-- <div class="intro">Sample MVP app for camio to test HLS streaming</div>
   <div class="button-container">

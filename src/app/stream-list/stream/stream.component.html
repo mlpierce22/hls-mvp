@@ -1,17 +1,20 @@
 <div class="video-container">
-  <video class="video" (click)="selectVideo.emit()" *ngIf="stream"
+  <video class="video" (click)="focusVideo.emit()" *ngIf="stream"
   id="live-stream-{{stream.id}}" [style.height.px]="streamDim.height" [style.width.px]="streamDim.width" autoPlay>
 </video>
 <div class="bottom-metadata">
   <div class="text" [ngClass]="{'online': stream.online, 'offline': !stream.online}">
-    {{ stream.online ? 'ONLINE' : 'OFFLINE' }}
+    {{ stream.online ? 'online' : 'offline' }}
   </div>
-  <select class="search" name="search" >
-    <option (click)="search.emit(stream.cameraName)">{{ stream.cameraName }}</option>
-    <option *ngFor="let label of stream.labels" (click)="search.emit(stream.cameraName)">{{ label }}</option>
-  </select>
+  <div class="dropdown-container" (clickOutside)="isDropdown = false">
+    <button class="dropdown-btn" (click)="toggleDropdown()">{{ stream.cameraName }}</button>
+    <div class="dropdown" [ngClass]="{'show': isDropdown }">
+      <div class="dropdown-option" (click)="search.emit(stream.cameraName)">{{ stream.cameraName }}</div>
+      <div class="dropdown-option" *ngFor="let label of stream.labels" (click)="search.emit(stream.cameraName)">{{ label }}</div>
+    </div>
+  </div>
   <div class="time">{{ stream.timeStamp | date:'mediumTime'}}</div>
-  <img class="rewind" src="https://img.icons8.com/ios/100/000000/skip-15-seconds-back.png"/>
-  <img class="checkbox" src="https://icongr.am/material/tag-multiple.svg?size=128&color=currentColor">
+  <button class="rewind" (click)="rewindVideo()"><img class="rewind-icon" src="https://icongr.am/fontawesome/history.svg?size=20&color=000000"/></button>
+  <img class="checkbox" (click)="toggleVideoSelect.emit()" [src]="isTagSelected()">
 </div>
 </div>

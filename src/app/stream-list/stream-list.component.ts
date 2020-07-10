@@ -12,7 +12,9 @@ export class StreamListComponent implements OnInit {
 
   @Input() listedStreamDim: VideoDimensions
 
-  @Output() selectVideo: EventEmitter<number> = new EventEmitter<number>();
+  @Output() focusVideo: EventEmitter<number> = new EventEmitter<number>();
+
+  @Output() toggleVideoSelect: EventEmitter<number> = new EventEmitter<number>();
 
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
