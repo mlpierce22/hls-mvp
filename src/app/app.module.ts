@@ -8,6 +8,8 @@ import { FocusedStreamComponent } from './focused-stream/focused-stream.componen
 import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
 import { ClickOutsideDirective } from './stream-list/stream/click-outside.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

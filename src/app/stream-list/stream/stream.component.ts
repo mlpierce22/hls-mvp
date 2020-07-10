@@ -43,11 +43,11 @@ export class StreamComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     // on the first time
-    if (changes["stream"].firstChange) {
+    if (!!changes["stream"] && changes["stream"].firstChange) {
       this.setupHls(this.stream);
     }
     if (
-      !!changes["stream"].previousValue &&
+      !!changes["stream"] && !!changes["stream"].previousValue &&
       changes["stream"].currentValue["manifestUrl"] !==
         changes["stream"].previousValue["manifestUrl"]
     ) {

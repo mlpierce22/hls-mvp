@@ -1,0 +1,27 @@
+.button-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin: 10px;
+
+  button {
+    margin-right: -1px;
+  }
+
+  ::ng-deep .mat-stroked-button {
+    border-radius: 0px;
+  }
+
+  ::ng-deep .mat-raised-button {
+    border-radius: 0px;
+  }
+  .settings {
+    img {
+      opacity: .26;
+    }
+  }
+  
+  img {
+    margin-bottom: 4px;
+  }
+}
