@@ -7,6 +7,7 @@ import { StreamComponent } from './stream-list/stream/stream.component';
 import { FocusedStreamComponent } from './focused-stream/focused-stream.component';
 import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
 import { ClickOutsideDirective } from './stream-list/stream/click-outside.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ClickOutsideDirective } from './stream-list/stream/click-outside.direct
     ClickOutsideDirective
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
