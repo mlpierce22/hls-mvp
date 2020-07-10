@@ -1,5 +1,9 @@
-.app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+:host {
+  margin: 0;
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
 }

@@ -23,4 +23,7 @@ export class StreamListComponent implements OnInit {
   ngOnInit() {
   }
 
+  trackByFn(index, item) {
+    return index; 
+  }
 }
