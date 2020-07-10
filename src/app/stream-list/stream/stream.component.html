@@ -1,20 +1,22 @@
 <div class="video-container" [ngClass]="{'show-border': showBorder}">
-  <video class="video" (click)="focusVideo.emit()" *ngIf="stream" (mouseover)="showBorder = true" (mouseleave)="showBorder = false"
-  id="live-stream-{{stream.id}}" [style.height.px]="streamDim.height" [style.width.px]="streamDim.width" autoPlay>
-</video>
-<div class="bottom-metadata">
-  <div class="text" [ngClass]="{'online': stream.online, 'offline': !stream.online}">
-    {{ stream.online ? 'online' : 'offline' }}
-  </div>
-  <div class="dropdown-container" (clickOutside)="isDropdown = false">
-    <button class="dropdown-btn" (click)="toggleDropdown()">{{ stream.cameraName }}</button>
-    <div class="dropdown" [ngClass]="{'show': isDropdown }">
-      <div class="dropdown-option" (click)="search.emit(stream.cameraName)">{{ stream.cameraName }}</div>
-      <div class="dropdown-option" *ngFor="let label of stream.labels" (click)="search.emit(label)">{{ label }}</div>
+  <video class="video" (click)="focusVideo.emit()" *ngIf="stream" (mouseover)="showBorder = true"
+    (mouseleave)="showBorder = false" id="live-stream-{{stream.id}}" [style.height.px]="streamDim.height"
+    [style.width.px]="streamDim.width" autoPlay>
+  </video>
+  <div class="bottom-metadata">
+    <div class="text" [ngClass]="{'online': stream.online, 'offline': !stream.online}">
+      {{ stream.online ? 'online' : 'offline' }}
     </div>
+    <div class="dropdown-container" (clickOutside)="isDropdown = false">
+      <button class="dropdown-btn" (click)="toggleDropdown()">{{ stream.cameraName }}</button>
+      <div class="dropdown" [ngClass]="{'show': isDropdown }">
+        <div class="dropdown-option" (click)="search.emit(stream.cameraName)">{{ stream.cameraName }}</div>
+        <div class="dropdown-option" *ngFor="let label of stream.labels" (click)="search.emit(label)">{{ label }}</div>
+      </div>
+    </div>
+    <div class="time">{{ stream.timeStamp | date:'mediumTime'}}</div>
+    <button class="rewind" (click)="rewindVideo()"><img class="rewind-icon"
+        src="https://icongr.am/fontawesome/history.svg?size=20&color=000000" /></button>
+    <img class="checkbox" (click)="toggleVideoSelect.emit()" [src]="isTagSelected()">
   </div>
-  <div class="time">{{ stream.timeStamp | date:'mediumTime'}}</div>
-  <button class="rewind" (click)="rewindVideo()"><img class="rewind-icon" src="https://icongr.am/fontawesome/history.svg?size=20&color=000000"/></button>
-  <img class="checkbox" (click)="toggleVideoSelect.emit()" [src]="isTagSelected()">
-</div>
 </div>

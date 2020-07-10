@@ -9,13 +9,13 @@
     box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
     cursor: pointer;
   }
-  
+
   .bottom-metadata {
     display: flex;
     flex-direction: row;
     width: 100%;
     margin-top: 5px;
-    
+
     .text {
       padding: 2px 5px;
       border-radius: 4px;
@@ -23,7 +23,7 @@
       margin-right: 5px;
 
       &.online {
-        background-color: #3AC162;
+        background-color: #3ac162;
         color: white;
       }
 
@@ -40,7 +40,6 @@
 
       .dropdown-btn {
         cursor: pointer;
-
       }
 
       .dropdown {
@@ -50,7 +49,7 @@
         position: absolute;
         top: 29.5px;
         background-color: rgba(255, 255, 255, 0.9);
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         z-index: 1;
 
         &.show {
@@ -75,17 +74,13 @@
     }
 
     .rewind {
-      margin-left: auto;
       cursor: pointer;
-
-      .rewind-icon {
-      }
+      margin-left: 5px;
     }
 
     .checkbox {
-      margin-left: 5px;
       cursor: pointer;
+      margin-left: auto;
     }
-
   }
 }
