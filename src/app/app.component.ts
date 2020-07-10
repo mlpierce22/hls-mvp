@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, OnDestroy } from "@angular/core";
-import { Subject, Observable, BehaviorSubject, fromEvent, of } from "rxjs";
+import { Subject, Observable, BehaviorSubject, fromEvent, of, combineLatest, merge } from "rxjs";
 import {
   map,
   takeUntil,
@@ -25,11 +25,17 @@ export class AppComponent implements OnDestroy {
   /** Destroy observables so no leaks. */
   unsubscribe$: Subject<void> = new Subject<void>();
 
+  /** Partial LiveStream Object from backend */
+  liveStreamData$: BehaviorSubject<Partial<LiveStream>[]> = new BehaviorSubject<Partial<LiveStream>[]>(null);
+
   /** Constructed LiveStream Object */
-  liveStreams$: Observable<LiveStream[]> = new Observable<LiveStream[]>();
+  liveStreams$: BehaviorSubject<LiveStream[]> = new BehaviorSubject<LiveStream[]>(null);
 
   /** The live stream used to  */
-  focusedStream$: Observable<LiveStream> = new Observable<LiveStream>(null);
+  focusedStream$: BehaviorSubject<LiveStream> = new BehaviorSubject<LiveStream>(null);
+
+  /** The live stream used to  */
+  selectedStreams$: BehaviorSubject<LiveStream[]> = new BehaviorSubject<LiveStream[]>(null);
 
   /** The index of the selected Stream */
   focusedStreamIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(
@@ -56,7 +62,10 @@ export class AppComponent implements OnDestroy {
   constructor(public fss: FetchStreamService) {}
 
   ngOnInit(): void {
-    this.liveStreams$ = this.fss.fetch().pipe(
+
+    this.adjustDisplay();
+
+    this.fss.fetch().pipe(
       map((liveStreams) => {
         return liveStreams.map((metaData, index) => {
           return {
@@ -66,33 +75,53 @@ export class AppComponent implements OnDestroy {
             timeStamp: metaData.timeStamp,
             labels: metaData.labels,
             id: index,
-            isFocused: false,
-            isSelected: false,
           };
         });
-      })
-    );
-
-    this.focusedStream$ = this.focusedStreamIndex$.pipe(
-      startWith(null),
-      distinctUntilChanged(),
-      pairwise(),
-      withLatestFrom(this.liveStreams$),
-      map(([[prevIndex, currIndex], streams]) => {
-        console.log("advanced index from " + prevIndex + " to " + currIndex);
-
-        if (currIndex !== null) {
-          streams[currIndex].isFocused = true;
-          if (prevIndex !== null) {
-            streams[prevIndex].isFocused = false;
-          }
-          return streams[currIndex];
-        } else {
-          return null;
-        }
       }),
-      takeUntil(this.unsubscribe$)
-    );
+    ).subscribe(streamArray => {
+      this.liveStreamData$.next(streamArray)
+    });
+
+    combineLatest(this.liveStreamData$, this.selectedStreams$, this.focusedStream$)
+    .pipe(
+      takeUntil(this.unsubscribe$))
+    .subscribe(([liveStreamData, selected, focused]) => {
+      let updatedStream: LiveStream[] = liveStreamData.map((stream, index) => {
+        return {
+          manifestUrl: stream.manifestUrl,
+          online: stream.online,
+          cameraName: stream.cameraName,
+          timeStamp: stream.timeStamp,
+          labels: stream.labels,
+          id: index,
+          currentIndex: index, // TODO: get from local storage
+          isFocused: !!focused && focused.id == stream.id,
+          isSelected: !!selected && selected.filter(sel => sel.id == stream.id).length == 1
+        }
+      })
+      this.liveStreams$.next(updatedStream)
+    })
+
+    // this.focusedStreamIndex$.pipe(
+    //   distinctUntilChanged(),
+    //   pairwise(),
+    //   withLatestFrom(this.liveStreams$),
+    //   map(([[prevIndex, currIndex], streams]) => {
+    //     console.log("advanced index from " + prevIndex + " to " + currIndex);
+
+    //     let streamCopy = [...streams] 
+    //     if (currIndex !== null) {
+    //       streamCopy[currIndex].isFocused = true;
+    //       if (prevIndex !== null) {
+    //         streamCopy[prevIndex].isFocused = false;
+    //       }
+    //       return streamCopy[currIndex];
+    //     } else {
+    //       return null;
+    //     }
+    //   }),
+    //   takeUntil(this.unsubscribe$)
+    // ).subscribe(focusedStream => this.focusedStream$.next(focusedStream));
 
     this.search$.pipe(takeUntil(this.unsubscribe$)).subscribe((query) => {
       console.log("searching the following query:", query);
@@ -101,36 +130,64 @@ export class AppComponent implements OnDestroy {
     fromEvent(window, "resize")
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
-        const focusedWidth = window.innerWidth * 0.74;
-        const focusedHeight = focusedWidth * 0.56;
-        this.focusedStreamDim$.next({
-          width: focusedWidth,
-          height: focusedHeight,
-        });
-
-        if (window.innerWidth < 500) {
-          const listedWidth = window.innerWidth * 0.7;
-          const listedHeight = focusedWidth * 0.56;
-          this.listedStreamDim$.next({
-            width: listedWidth,
-            height: listedHeight,
-          });
-        }
+        this.adjustDisplay()
       });
 
     this.toggleVideoSelect$
-      .pipe(withLatestFrom(this.liveStreams$), takeUntil(this.unsubscribe$))
-      .subscribe(([index, streams]) => {
-        console.log(index, streams);
-        streams[index].isSelected = !streams[index].isSelected;
-        this.liveStreams$ = of(streams);
-      });
+      .pipe(withLatestFrom(this.liveStreams$, this.selectedStreams$), takeUntil(this.unsubscribe$))
+      .subscribe(([index, streams, selectedStreams]) => {
+        console.log("the index is:", index)
+        let selectedStreamsCopy;
+        if (!selectedStreams) {
+          let newArray = new Array<LiveStream>();
+          newArray.push(streams[index])
+          this.selectedStreams$.next(newArray)
+        } else if (selectedStreams.length == 0) {
+          selectedStreamsCopy = [...selectedStreams]
+          selectedStreamsCopy.push(streams[index])
+        } else {
+          let location = null;
+          selectedStreamsCopy = [...selectedStreams]
+          selectedStreamsCopy.forEach((selStream, indx) => {
+            // if the stream is already in there, save where it is
+            if (selStream.id == streams[index].id) {
+              location = indx;
+              return;
+            } 
+          })
+
+          if (location !== null) {
+            selectedStreamsCopy.splice(location, 1)
+          } else {
+            selectedStreamsCopy.push(streams[index])
+          }
+          this.selectedStreams$.next(selectedStreamsCopy)
+        }
+    });
   }
 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  adjustDisplay() {
+    const focusedWidth = window.innerWidth * 0.74;
+    const focusedHeight = focusedWidth * 0.56;
+    this.focusedStreamDim$.next({
+      width: focusedWidth,
+      height: focusedHeight,
+    });
+
+    if (window.innerWidth < 500) {
+      const listedWidth = window.innerWidth * 0.7;
+      const listedHeight = focusedWidth * 0.56;
+      this.listedStreamDim$.next({
+        width: listedWidth,
+        height: listedHeight,
+      });
+    }
   }
 
   // /** Allows users to highlight multiple streams to delete */
