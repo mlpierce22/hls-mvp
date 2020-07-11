@@ -19,6 +19,13 @@ import { trigger, transition, animate, style } from '@angular/animations'
           maxHeight: '999px',
         }))
       ]),
+      transition(':leave', [
+        animate('500ms ease-in', 
+        style({ 
+          height: '0px',
+        })
+        )
+      ])
     ])
   ],
 })
@@ -35,6 +42,7 @@ export class FocusedStreamComponent implements OnInit {
 
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   constructor() { }
 

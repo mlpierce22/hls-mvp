@@ -1,5 +1,5 @@
-<div class="focused-stream-container" [@slideInOut]>
-  <app-stream [stream]="liveStreams[focusedStreamIndex]" [streamDim]="focusedStreamDim" [isSelected]="liveStreams[focusedStreamIndex].isSelected" (toggleVideoSelect)="toggleVideoSelect.emit(focusedStreamIndex)" (search)="search.emit($event)"></app-stream>
+<div class="focused-stream-container" *ngIf="focusedStreamIndex !== null" [@slideInOut]>
+  <app-stream [stream]="liveStreams[focusedStreamIndex]" [streamDim]="focusedStreamDim" [isSelected]="liveStreams[focusedStreamIndex].isSelected" [canClose]="'true'"(toggleVideoSelect)="toggleVideoSelect.emit(focusedStreamIndex)" (search)="search.emit($event)" (close)="close.emit()"></app-stream>
   <app-stream-buttons></app-stream-buttons>
 </div>
 

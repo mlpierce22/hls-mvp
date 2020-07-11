@@ -18,7 +18,10 @@ import Hls from "hls.js";
   styleUrls: ["./stream.component.scss"],
 })
 export class StreamComponent implements OnInit, OnChanges {
+
   @Input() stream: LiveStream;
+
+  @Input() canClose: boolean
 
   @Input() streamDim: VideoDimensions;
 
@@ -31,6 +34,8 @@ export class StreamComponent implements OnInit, OnChanges {
   @Output() toggleVideoSelect: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() rewind: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   isDropdown: boolean = false;
 
@@ -66,7 +71,7 @@ export class StreamComponent implements OnInit, OnChanges {
 
   isTagSelected() {
     let color;
-    if (this.stream.isSelected) {
+    if (this.isSelected) {
       color = "0a59f3"; // blue
     } else {
       color = "636363"; // gray
