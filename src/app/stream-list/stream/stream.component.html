@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="time">{{ stream.timeStamp | date:'mediumTime'}}</div>
-    <button mat-stroked-button matTooltip="Go back 15 minutes."class="rewind" (click)="rewindVideo()"><img class="rewind-icon"
+    <button mat-icon-button matTooltip="Go back 15 minutes."class="rewind" (click)="rewindVideo()"><img class="rewind-icon"
         src="https://icongr.am/fontawesome/history.svg?size=20&color=000000" /></button>
         <button mat-icon-button class="checkbox" (click)="toggleVideoSelect.emit()" matTooltip="Select camera.">
           <img [src]="isTagSelected()">
