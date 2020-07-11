@@ -102,27 +102,6 @@ export class AppComponent implements OnDestroy {
       this.liveStreams$.next(updatedStream)
     })
 
-    // this.focusedStreamIndex$.pipe(
-    //   distinctUntilChanged(),
-    //   pairwise(),
-    //   withLatestFrom(this.liveStreams$),
-    //   map(([[prevIndex, currIndex], streams]) => {
-    //     console.log("advanced index from " + prevIndex + " to " + currIndex);
-
-    //     let streamCopy = [...streams] 
-    //     if (currIndex !== null) {
-    //       streamCopy[currIndex].isFocused = true;
-    //       if (prevIndex !== null) {
-    //         streamCopy[prevIndex].isFocused = false;
-    //       }
-    //       return streamCopy[currIndex];
-    //     } else {
-    //       return null;
-    //     }
-    //   }),
-    //   takeUntil(this.unsubscribe$)
-    // ).subscribe(focusedStream => this.focusedStream$.next(focusedStream));
-
     this.search$.pipe(takeUntil(this.unsubscribe$)).subscribe((query) => {
       console.log("searching the following query:", query);
     });
@@ -136,7 +115,7 @@ export class AppComponent implements OnDestroy {
     this.toggleVideoSelect$
       .pipe(withLatestFrom(this.liveStreams$, this.selectedStreams$), takeUntil(this.unsubscribe$))
       .subscribe(([index, streams, selectedStreams]) => {
-        console.log("the index is:", index)
+
         let selectedStreamsCopy;
         if (!selectedStreams) {
           let newArray = new Array<LiveStream>();
@@ -145,6 +124,7 @@ export class AppComponent implements OnDestroy {
         } else if (selectedStreams.length == 0) {
           selectedStreamsCopy = [...selectedStreams]
           selectedStreamsCopy.push(streams[index])
+          this.selectedStreams$.next(selectedStreamsCopy)
         } else {
           let location = null;
           selectedStreamsCopy = [...selectedStreams]
@@ -189,23 +169,4 @@ export class AppComponent implements OnDestroy {
       });
     }
   }
-
-  // /** Allows users to highlight multiple streams to delete */
-  // toggleHighlight(index) {
-  //   this.liveStreams[index].selected = !this.liveStreams[index].selected
-  // }
-
-  // /** Handles delete stream click event */
-  // deleteStreams() {
-  //   let tempStream = this.liveStreams.filter(stream => !stream.selected);
-  //   this.liveStreams = tempStream;
-  // }
-
-  // /** Handles add stream click event */
-  // addStream() {
-  //   const randNum = Math.floor(Math.random() * this.liveStreamURLs.length - 1) + 1
-  //   let url = this.liveStreamURLs[randNum]
-  //   this.liveStreams.push({ id: this.liveStreams.length, url, selected: false})
-  //   this.setupHls(url, this.liveStreams.length - 1)
-  // }
 }
