@@ -7,6 +7,7 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  ViewEncapsulation,
 } from "@angular/core";
 import { LiveStream, VideoDimensions } from "src/app/app.models";
 import { Subject } from "rxjs";
@@ -16,6 +17,7 @@ import Hls from "hls.js";
   selector: "app-stream",
   templateUrl: "./stream.component.html",
   styleUrls: ["./stream.component.scss"],
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class StreamComponent implements OnInit, OnChanges {
 

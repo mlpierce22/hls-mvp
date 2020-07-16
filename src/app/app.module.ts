@@ -1,15 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements'
 
 import { AppComponent } from './app.component';
-import { StreamListComponent } from './stream-list/stream-list.component';
-import { StreamComponent } from './stream-list/stream/stream.component';
-import { FocusedStreamComponent } from './focused-stream/focused-stream.component';
-import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
-import { ClickOutsideDirective } from './stream-list/stream/click-outside.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CamioLiveStreamsComponent } from './camio-live-streams/camio-live-streams.component';
+import { StreamListComponent } from './camio-live-streams/stream-list/stream-list.component';
+import { StreamComponent } from './camio-live-streams/stream-list/stream/stream.component';
+import { FocusedStreamComponent } from './camio-live-streams/focused-stream/focused-stream.component';
+import { StreamButtonsComponent } from './camio-live-streams/focused-stream/stream-buttons/stream-buttons.component';
+import { ClickOutsideDirective } from './camio-live-streams/stream-list/stream/click-outside.directive';
 
 
 @NgModule({
@@ -19,7 +21,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     StreamComponent,
     FocusedStreamComponent,
     StreamButtonsComponent,
-    ClickOutsideDirective
+    ClickOutsideDirective,
+    CamioLiveStreamsComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +31,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [StreamComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(injector: Injector) {
+    const stream = createCustomElement(StreamComponent, { injector })
+    customElements.define('hls-stream', stream)
+  }
+
+  ngDoBootstrap() {
+
+  }
+}

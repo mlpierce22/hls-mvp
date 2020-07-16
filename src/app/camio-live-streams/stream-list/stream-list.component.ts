@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { LiveStream, VideoDimensions } from '../app.models';
+import { LiveStream, VideoDimensions } from 'src/app/app.models';
 
 @Component({
   selector: 'app-stream-list',
