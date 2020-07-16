@@ -31,16 +31,14 @@ import { ClickOutsideDirective } from './camio-live-streams/stream-list/stream/c
     MatTooltipModule
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [StreamComponent]
+  entryComponents: [CamioLiveStreamsComponent]
 })
 export class AppModule { 
-  constructor(injector: Injector) {
-    const stream = createCustomElement(StreamComponent, { injector })
-    customElements.define('hls-stream', stream)
+  constructor(private injector: Injector) {
   }
 
   ngDoBootstrap() {
-
+    const stream = createCustomElement(CamioLiveStreamsComponent, { injector: this.injector })
+    customElements.define('camio-live-streams', stream)
   }
 }
