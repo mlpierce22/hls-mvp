@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Subject, BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
 import { LiveStream, VideoDimensions } from '../app.models';
 import { FetchStreamService } from '../fetch-stream.service';
@@ -7,7 +7,7 @@ import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 @Component({
   selector: 'app-camio-live-streams',
   templateUrl: './camio-live-streams.component.html',
-  styleUrls: ['./camio-live-streams.component.scss']
+  styleUrls: ['./camio-live-streams.component.scss'],
 })
 export class CamioLiveStreamsComponent implements OnInit, OnDestroy {
 

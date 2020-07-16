@@ -17,7 +17,6 @@ import Hls from "hls.js";
   selector: "app-stream",
   templateUrl: "./stream.component.html",
   styleUrls: ["./stream.component.scss"],
-  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class StreamComponent implements OnInit, OnChanges {
 
