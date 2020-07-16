@@ -4,7 +4,8 @@
     [style.width.px]="streamDim.width" autoPlay>
   </video>
   <button mat-icon-button *ngIf="canClose" matTooltip="Close video." class="close" (click)="close.emit()" matTooltip="Close video.">
-    <img src="https://icongr.am/material/close-circle-outline.svg?size=40&color=f67c0e">
+    <img src="https://icongr.am/material/close.svg?size=40&color=f67c0e">
+    <!-- <img src="https://icongr.am/material/close-circle-outline.svg?size=40&color=f67c0e"> -->
   </button>
   <div class="bottom-metadata">
     <div class="text" [ngClass]="{'online': stream.online, 'offline': !stream.online}">

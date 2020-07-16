@@ -47,7 +47,8 @@ export class StreamComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    // on the first time
+
+    // In the future, we may have to decide if this is the desired behavior
     if (!!changes["stream"] && changes["stream"].firstChange) {
       this.setupHls(this.stream);
     }
@@ -65,7 +66,9 @@ export class StreamComponent implements OnInit, OnChanges {
   }
 
   rewindVideo() {
-    console.log("rewinding 15 minutes");
+    let video = document.getElementById("live-stream-" + this.stream.id) as HTMLVideoElement
+    let newTime = video.currentTime - 900 >= 0 ? video.currentTime - 900: 0
+    video.currentTime = newTime
     this.rewind.emit();
   }
 
@@ -113,7 +116,7 @@ export class StreamComponent implements OnInit, OnChanges {
           hls.attachMedia(video);
           hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             video.muted = true;
-            video.controls = false;
+            video.controls = true;
             video.loop = true;
             hls.loadSource(stream.manifestUrl);
             hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {

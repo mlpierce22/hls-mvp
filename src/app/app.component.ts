@@ -42,6 +42,8 @@ export class AppComponent implements OnDestroy {
     null
   );
 
+  editZones$: Subject<LiveStream> = new Subject<LiveStream>();
+
   /** Event to handle searching */
   search$: Subject<string> = new Subject<string>();
 
@@ -144,6 +146,11 @@ export class AppComponent implements OnDestroy {
           this.selectedStreams$.next(selectedStreamsCopy)
         }
     });
+
+    this.editZones$.pipe(takeUntil(this.unsubscribe$))
+    .subscribe((stream) => {
+      console.log("editing zones for the following camera:", stream.cameraName);
+    })
   }
 
   ngOnDestroy(): void {

@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { LiveStream, VideoDimensions } from '../app.models';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { trigger, transition, animate, style } from '@angular/animations'
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -29,7 +30,7 @@ import { trigger, transition, animate, style } from '@angular/animations'
     ])
   ],
 })
-export class FocusedStreamComponent implements OnInit {
+export class FocusedStreamComponent implements OnInit, OnDestroy {
 
   /** The big stream the user is focused on. */
   @Input() focusedStreamIndex: number;
@@ -44,9 +45,55 @@ export class FocusedStreamComponent implements OnInit {
 
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output() editZones: EventEmitter<LiveStream> = new EventEmitter<LiveStream>()
+
+  startStream$: Subject<void> = new Subject<void>();
+
+  stopStream$: Subject<void> = new Subject<void>();
+
+  // For future: OpenSettings
+
+  fullScreen$: Subject<void> = new Subject<void>();
+
+  shareCamera$: Subject<boolean> = new Subject<boolean>();
+
+  unsubscribe$: Subject<void> = new Subject<void>();
   constructor() { }
 
   ngOnInit() {
+
+    this.shareCamera$.pipe(takeUntil(this.unsubscribe$)).subscribe(share => {
+      console.log("show share", share)
+    })
+
+    this.fullScreen$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      let focusedStreamElem = document.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
+      
+      if (focusedStreamElem) {
+        focusedStreamElem.requestFullscreen().catch(error => {
+          console.warn("Failed to enter full screen because: ", error)
+        })
+
+      }
+    })
+
+    this.startStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      let focusedStreamElem = document.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
+      // In the future, this might ask to embed the 
+      focusedStreamElem.play()
+    })
+
+    this.stopStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      // in the future, this will swap out the live feed with an incrementally updated image
+      let focusedStreamElem = document.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
+      focusedStreamElem.pause();
+    })
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
 }
