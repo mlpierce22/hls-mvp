@@ -5,12 +5,13 @@ import { createCustomElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
 import { StreamListComponent } from './stream-list/stream-list.component';
-import { StreamComponent } from './stream-list/stream/stream.component';
 import { FocusedStreamComponent } from './focused-stream/focused-stream.component';
 import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { StreamWrapperComponent } from './stream-wrapper/stream-wrapper.component';
+import { StreamComponent } from './stream-wrapper/stream/stream.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     StreamComponent,
     FocusedStreamComponent,
     StreamButtonsComponent,
+    StreamWrapperComponent,
   ],
   imports: [
     BrowserModule,
