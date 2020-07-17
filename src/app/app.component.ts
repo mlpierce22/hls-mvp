@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy } from "@angular/core";
+import { Component, AfterViewInit, OnDestroy, ViewEncapsulation } from "@angular/core";
 import { Subject, Observable, BehaviorSubject, fromEvent, of, combineLatest, merge } from "rxjs";
 import {
   map,
@@ -17,6 +17,7 @@ import { LiveStream, VideoDimensions } from "./app.models";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class AppComponent implements OnDestroy {
   width: number = 250;
@@ -81,6 +82,7 @@ export class AppComponent implements OnDestroy {
         });
       }),
     ).subscribe(streamArray => {
+      console.log(streamArray)
       this.liveStreamData$.next(streamArray)
     });
 
