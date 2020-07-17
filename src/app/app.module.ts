@@ -1,12 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
+
 
 import { AppComponent } from './app.component';
 import { StreamListComponent } from './stream-list/stream-list.component';
 import { StreamComponent } from './stream-list/stream/stream.component';
 import { FocusedStreamComponent } from './focused-stream/focused-stream.component';
 import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
-import { ClickOutsideDirective } from './stream-list/stream/click-outside.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -19,7 +20,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     StreamComponent,
     FocusedStreamComponent,
     StreamButtonsComponent,
-    ClickOutsideDirective
   ],
   imports: [
     BrowserModule,
@@ -28,6 +28,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  entryComponents: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private inject: Injector) {
+
+  }
+  ngDoBootstrap() {
+    const myElement = createCustomElement(AppComponent, { injector: this.inject });
+    customElements.define('camio-live-streams', myElement);
+  }
+}
