@@ -67,7 +67,7 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
     })
 
     this.fullScreen$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      let focusedStreamElem = document.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
+      let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
       
       if (focusedStreamElem) {
         focusedStreamElem.requestFullscreen().catch(error => {
@@ -78,14 +78,14 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
     })
 
     this.startStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      let focusedStreamElem = document.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
+      let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
       // In the future, this might ask to embed the 
       focusedStreamElem.play()
     })
 
     this.stopStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       // in the future, this will swap out the live feed with an incrementally updated image
-      let focusedStreamElem = document.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
+      let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
       focusedStreamElem.pause();
     })
   }

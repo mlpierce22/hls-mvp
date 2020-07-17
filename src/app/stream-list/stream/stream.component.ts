@@ -43,7 +43,9 @@ export class StreamComponent implements OnInit, OnChanges {
 
   constructor(public cdr: ChangeDetectorRef) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.registerDropdown()    
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -65,8 +67,26 @@ export class StreamComponent implements OnInit, OnChanges {
     this.isDropdown = !this.isDropdown;
   }
 
+  registerDropdown() {
+    document.body.addEventListener("click", ev => {
+      let hasContainer = false
+      ev.composedPath().forEach(path => {
+        const id = (path as HTMLElement).id
+        const contId = "dropdown-container-" + this.stream.id
+        if (id && (id == contId)) {
+          hasContainer = true
+          return;
+        }
+      })
+      // if the dropdown is open and the click event doesn't contain the container
+      if (this.isDropdown && !hasContainer) {
+        this.isDropdown = false
+      }
+    })
+  }
+
   rewindVideo() {
-    let video = document.getElementById("live-stream-" + this.stream.id) as HTMLVideoElement
+    let video = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.stream.id) as HTMLVideoElement
     let newTime = video.currentTime - 900 >= 0 ? video.currentTime - 900: 0
     video.currentTime = newTime
     this.rewind.emit();
@@ -84,9 +104,9 @@ export class StreamComponent implements OnInit, OnChanges {
 
   setupHls(stream: LiveStream) {
     let exists = setInterval(function () {
-      if (stream && document.getElementById("live-stream-" + stream.id)) {
+      if (stream && document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + stream.id)) {
         clearInterval(exists);
-        let video = document.getElementById(
+        let video = document.querySelector("camio-live-streams").shadowRoot.getElementById(
           "live-stream-" + stream.id
         ) as HTMLVideoElement;
         if (Hls.isSupported()) {

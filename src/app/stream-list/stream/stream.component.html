@@ -11,7 +11,7 @@
     <div class="text" [ngClass]="{'online': stream.online, 'offline': !stream.online}">
       {{ stream.online ? 'Online' : 'Offline' }}
     </div>
-    <div class="dropdown-container" (clickOutside)="isDropdown = false">
+    <div class="dropdown-container" id="dropdown-container-{{stream.id}}">
       <button mat-stroked-button matTooltip="Search by camera or camera label." [matTooltipDisabled]="isDropdown" class="dropdown-btn" (click)="toggleDropdown()">{{ stream.cameraName }}</button>
       <div class="dropdown" [ngClass]="{'show': isDropdown }">
         <div class="dropdown-option" (click)="search.emit(stream.cameraName)">{{ stream.cameraName }}</div>
