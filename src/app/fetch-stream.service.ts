@@ -43,4 +43,21 @@ export class FetchStreamService {
       },
     ])
   }
+
+  public fetchImage(cameraId: number): Observable<string> {
+    
+    const photos = [
+      //"https://source.unsplash.com/random/456x267"
+      "https://images.unsplash.com/photo-1592763022445-f31297d51d3a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=267&ixlib=rb-1.2.1&q=80&w=456",
+      "https://images.unsplash.com/photo-1594809810374-2a79fe387e7d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=267&ixlib=rb-1.2.1&q=80&w=456",
+      "https://images.unsplash.com/photo-1593205804269-118584b0860e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=267&ixlib=rb-1.2.1&q=80&w=456",
+      "https://images.unsplash.com/photo-1593145141686-e342b4f0729d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=267&ixlib=rb-1.2.1&q=80&w=456",
+      "https://images.unsplash.com/photo-1594749794764-717b02dbb530?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=267&ixlib=rb-1.2.1&q=80&w=456",
+      "https://images.unsplash.com/photo-1593443320566-1fcb1a3d2ca5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=267&ixlib=rb-1.2.1&q=80&w=456",
+
+    ]
+    const startIndex = Math.floor(Math.random() * (cameraId + Math.random() * 100)) % 6
+    console.log("choosing:", startIndex)
+    return of(photos[startIndex])
+  }
 }
