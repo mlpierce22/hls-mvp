@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { LiveStream, VideoDimensions } from '../app.models';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { trigger, transition, animate, style } from '@angular/animations'
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, withLatestFrom } from 'rxjs/operators';
 
 
 @Component({
@@ -10,14 +10,17 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './focused-stream.component.html',
   styleUrls: ['./focused-stream.component.scss'],
   animations: [
+    // Maybe these animations will work in the future: https://github.com/angular/angular/issues/25672
     trigger('slideInOut', [
       transition(':enter', [
         style({
           maxHeight: '0px',
+          backgroundColor: 'blue'
         }),
         animate('500ms ease-in', 
         style({
-          maxHeight: '999px',
+          maxHeight: '0px',
+          backgroundColor: 'blue'
         }))
       ]),
       transition(':leave', [
@@ -39,6 +42,8 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
   
   @Input() focusedStreamDim: VideoDimensions;
 
+  @Input() posterUrl: string
+
   @Output() toggleVideoSelect: EventEmitter<number> = new EventEmitter<number>();
 
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
@@ -58,6 +63,9 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
   shareCamera$: Subject<boolean> = new Subject<boolean>();
 
   unsubscribe$: Subject<void> = new Subject<void>();
+
+  isStreaming$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor() { }
 
   ngOnInit() {
@@ -66,10 +74,10 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
       console.log("show share", share)
     })
 
-    this.fullScreen$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+    this.fullScreen$.pipe(withLatestFrom(this.isStreaming$), takeUntil(this.unsubscribe$)).subscribe(([_, isStreaming]) => {
       let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
       
-      if (focusedStreamElem) {
+      if (focusedStreamElem && isStreaming) {
         focusedStreamElem.requestFullscreen().catch(error => {
           console.warn("Failed to enter full screen because: ", error)
         })
@@ -80,13 +88,15 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
     this.startStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
       // In the future, this might ask to embed the 
-      focusedStreamElem.play()
+      //focusedStreamElem.play()
+      this.isStreaming$.next(true)
     })
 
     this.stopStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       // in the future, this will swap out the live feed with an incrementally updated image
       let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
-      focusedStreamElem.pause();
+      //focusedStreamElem.pause();
+      this.isStreaming$.next(false)
     })
   }
 

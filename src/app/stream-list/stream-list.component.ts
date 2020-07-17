@@ -12,6 +12,8 @@ export class StreamListComponent implements OnInit {
 
   @Input() listedStreamDim: VideoDimensions
 
+  @Input() posterUrl: string
+
   @Output() focusVideo: EventEmitter<number> = new EventEmitter<number>();
 
   @Output() toggleVideoSelect: EventEmitter<number> = new EventEmitter<number>();

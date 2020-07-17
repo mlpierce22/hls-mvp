@@ -1,5 +1,5 @@
 <div class="live-tiles">
   <div class="video-container" *ngFor="let stream of liveStreams; trackBy: trackByFn">
-    <app-stream [stream]="stream" [streamDim]="listedStreamDim" [isSelected]="stream.isSelected" (focusVideo)="focusVideo.emit(stream.currentIndex)" (toggleVideoSelect)="toggleVideoSelect.emit(stream.currentIndex)" (search)="search.emit($event)"></app-stream>
+    <app-stream-wrapper [stream]="stream" [streamDim]="listedStreamDim" [isSelected]="stream.isSelected" [showPoster]="'true'" (focusVideo)="focusVideo.emit(stream.currentIndex)" (toggleVideoSelect)="toggleVideoSelect.emit(stream.currentIndex)" (search)="search.emit($event)"></app-stream-wrapper>
   </div>
 </div>
