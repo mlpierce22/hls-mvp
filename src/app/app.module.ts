@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector } from '@angular/core';
+import { NgModule, Injector, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
 
 
@@ -30,14 +30,15 @@ import { StreamComponent } from './stream-wrapper/stream/stream.component';
     MatTooltipModule
   ],
   providers: [],
-  entryComponents: [AppComponent]
+  entryComponents: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { 
   constructor(private inject: Injector) {
 
   }
   ngDoBootstrap() {
-    const myElement = createCustomElement(AppComponent, { injector: this.inject });
-    customElements.define('camio-live-streams', myElement);
+    const liveStreams = createCustomElement(AppComponent, { injector: this.inject });
+    customElements.define('camio-live-streams', liveStreams);
   }
 }
