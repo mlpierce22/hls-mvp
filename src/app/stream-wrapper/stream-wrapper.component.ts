@@ -49,7 +49,7 @@ export class StreamWrapperComponent implements OnInit, OnDestroy, OnChanges {
 
   unsubscribe$: Subject<void> = new Subject<void>()
 
-  constructor(public cdr: ChangeDetectorRef, private fss: FetchStreamService) {}
+  constructor(public cdr: ChangeDetectorRef, public fss: FetchStreamService) {}
 
   ngOnInit() {
     this.registerDropdown();
