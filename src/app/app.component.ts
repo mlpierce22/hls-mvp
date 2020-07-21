@@ -13,6 +13,7 @@ import {
 } from "rxjs/operators";
 import { FetchStreamService } from "./fetch-stream.service";
 import { LiveStream, VideoDimensions } from "./app.models";
+import * as arrayMove from "array-move"
 
 @Component({
   selector: "app-root",
@@ -163,12 +164,13 @@ export class AppComponent implements OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe(([ev, liveStream]) => {
       if (ev['type'] != "drop") {
-        let newLiveStream = liveStream.map((stream, index) => {
-          stream.currentIndex = index
-          return stream
+        console.log("moving from " + ev['oldIndex'] + " to " + ev['newIndex'])
+        let newStream = arrayMove(liveStream, ev['oldIndex'], ev['newIndex'])
+        newStream.forEach((stream, index) => {
+            stream.currentIndex = index
         })
-        console.log("in order now:", newLiveStream)
-      //this.liveStreams$.next(newLiveStream)
+        console.log("updated:", newStream)
+        this.liveStreams$.next(newStream)
       }
     })
   }
