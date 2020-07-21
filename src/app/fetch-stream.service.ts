@@ -57,7 +57,6 @@ export class FetchStreamService {
 
     ]
     const startIndex = Math.floor(Math.random() * (cameraId + Math.random() * 100)) % 6
-    console.log("choosing:", startIndex)
     return of(photos[startIndex])
   }
 }

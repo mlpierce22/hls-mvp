@@ -56,6 +56,9 @@ export class AppComponent implements OnDestroy {
   /** Event that handles the newly dropped stream. */
   dropped$: Subject<Object> = new Subject<Object>();
 
+  /** Event that handles the newly dropped stream. */
+  savePosition$: Subject<void> = new Subject<void>();
+
   // --------------- OPTIONS ---------------
   /** The size of the focused stream. */
   focusedStreamDim$: BehaviorSubject<VideoDimensions> = new BehaviorSubject<
@@ -87,7 +90,6 @@ export class AppComponent implements OnDestroy {
         });
       }),
     ).subscribe(streamArray => {
-      console.log(streamArray)
       this.liveStreamData$.next(streamArray)
     });
 
@@ -96,6 +98,11 @@ export class AppComponent implements OnDestroy {
       takeUntil(this.unsubscribe$))
     .subscribe(([liveStreamData, selected, focused]) => {
       let updatedStream: LiveStream[] = liveStreamData.map((stream, index) => {
+        let savedStream = localStorage.getItem(stream.id.toString())
+        let streamObj: LiveStream;
+        if (savedStream) {
+           streamObj = JSON.parse(savedStream)
+        }
         return {
           manifestUrl: stream.manifestUrl,
           online: stream.online,
@@ -103,11 +110,11 @@ export class AppComponent implements OnDestroy {
           timeStamp: stream.timeStamp,
           labels: stream.labels,
           id: index,
-          currentIndex: index, // TODO: get from local storage
+          currentIndex: streamObj ? streamObj.currentIndex : index,
           isFocused: !!focused && focused.id == stream.id,
           isSelected: !!selected && selected.filter(sel => sel.id == stream.id).length == 1
         }
-      })
+      }).sort((a, b) => a.currentIndex - b.currentIndex)
       this.liveStreams$.next(updatedStream)
     })
 
@@ -171,8 +178,18 @@ export class AppComponent implements OnDestroy {
         })
         console.log("updated:", newStream)
         this.liveStreams$.next(newStream)
+        this.savePosition$.next()
       }
     })
+
+    this.savePosition$.pipe(
+      withLatestFrom(this.liveStreams$), 
+      takeUntil(this.unsubscribe$)
+      ).subscribe(([_,liveStreams]) => {
+        liveStreams.forEach(stream => {
+          localStorage.setItem(stream.id.toString(), JSON.stringify(stream));
+        })
+      });
   }
 
   ngOnDestroy(): void {
