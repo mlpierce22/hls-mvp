@@ -40,8 +40,7 @@ export class StreamListComponent implements OnInit {
       onEnd: (ev) => this.drop.emit(ev),
     });
   }
-  // Need the trackby if we want live video in the for loop
-  // trackByFn(index, item) {
-  //   return index; 
-  // }
+  trackByFn(index, item) {
+    return item; 
+  }
 }
