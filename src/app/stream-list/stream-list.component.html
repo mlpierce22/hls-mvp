@@ -1,5 +1,9 @@
-<div class="live-tiles">
-  <div class="video-container" *ngFor="let stream of liveStreams; trackBy: trackByFn">
+<div class="live-tiles" id="streamList">
+  <div class="video-container stream-id-{{stream.currentIndex}}" *ngFor="let stream of liveStreams; trackBy: trackByFn">
     <app-stream-wrapper [stream]="stream" [streamDim]="listedStreamDim" [isSelected]="stream.isSelected" [showPoster]="'true'" (focusVideo)="focusVideo.emit(stream.currentIndex)" (toggleVideoSelect)="toggleVideoSelect.emit(stream.currentIndex)" (search)="search.emit($event)"></app-stream-wrapper>
+    <svg class="dragger" width="24px" viewBox="0 0 24 24">
+      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+      <path d="M0 0h24v24H0z" fill="none"></path>
+    </svg>
   </div>
 </div>
