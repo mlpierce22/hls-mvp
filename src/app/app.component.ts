@@ -52,6 +52,9 @@ export class AppComponent implements OnDestroy {
   /** Event to handle toggling a video select. */
   toggleVideoSelect$: Subject<number> = new Subject<number>();
 
+  /** Event that handles the newly dropped stream. */
+  dropped$: Subject<Object> = new Subject<Object>();
+
   // --------------- OPTIONS ---------------
   /** The size of the focused stream. */
   focusedStreamDim$: BehaviorSubject<VideoDimensions> = new BehaviorSubject<
@@ -153,6 +156,20 @@ export class AppComponent implements OnDestroy {
     this.editZones$.pipe(takeUntil(this.unsubscribe$))
     .subscribe((stream) => {
       console.log("editing zones for the following camera:", stream.cameraName);
+    })
+
+    this.dropped$.pipe(
+      withLatestFrom(this.liveStreams$), 
+      takeUntil(this.unsubscribe$)
+    ).subscribe(([ev, liveStream]) => {
+      if (ev['type'] != "drop") {
+        let newLiveStream = liveStream.map((stream, index) => {
+          stream.currentIndex = index
+          return stream
+        })
+        console.log("in order now:", newLiveStream)
+      //this.liveStreams$.next(newLiveStream)
+      }
     })
   }
 
