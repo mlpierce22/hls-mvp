@@ -23,9 +23,13 @@ export class StreamListComponent implements OnInit {
 
   @Output() drop: EventEmitter<Object> = new EventEmitter<Object>();
 
+  showDragger: boolean[] = [];
+
   constructor() { }
 
   ngOnInit() {
+    this.liveStreams.forEach(() => this.showDragger.push(false))
+
     const streamList = document.querySelector("camio-live-streams").shadowRoot.getElementById("streamList")
     Sortable.create(streamList, {
       handle: '.dragger',

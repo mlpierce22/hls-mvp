@@ -6,10 +6,18 @@
 
   .video-container {
     margin: 0 1px;
+    display: flex;
+    position: relative;
 
     .dragger {
       cursor: move;
       cursor: -webkit-grabbing;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #ffffff88;
+      border-radius: 50%;
     }
   }
 }
