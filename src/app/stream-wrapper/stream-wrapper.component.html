@@ -1,5 +1,6 @@
 <div class="video-container" [ngClass]="{'show-border': showBorder}">
   <camio-stream-component [stream]="stream" [streamDim]="streamDim" [posterUrl]="posterUrl$ | async" (focusVideo)="focusVideo.emit()" (showBorder)="showBorder = $event.detail"></camio-stream-component>
+  <!-- <app-stream [stream]="stream" [streamDim]="streamDim" [posterUrl]="posterUrl$ | async" (focusVideo)="focusVideo.emit()" (showBorder)="showBorder = $event.detail" [videoElement]="videoElement"></app-stream> -->
   <button mat-icon-button *ngIf="canClose" matTooltip="Close video." class="close" (click)="close.emit()"
     matTooltip="Close video.">
     <img src="https://icongr.am/material/close.svg?size=40&color=f67c0e">

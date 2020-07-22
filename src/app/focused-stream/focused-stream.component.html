@@ -2,7 +2,7 @@
   <app-stream-wrapper [stream]="liveStreams[focusedStreamIndex]" [streamDim]="focusedStreamDim"
     [isSelected]="liveStreams[focusedStreamIndex].isSelected" [canClose]="'true'"
     (toggleVideoSelect)="toggleVideoSelect.emit(focusedStreamIndex)" (search)="search.emit($event)"
-    (close)="close.emit()" [showPoster]="!(isStreaming$ | async)"></app-stream-wrapper>
+    (close)="closeStream()" [showPoster]="!(isStreaming$ | async)"></app-stream-wrapper>
   <app-stream-buttons (startStream)="startStream$.next()" (stopStream)="stopStream$.next()"
     (editZones)="editZones.emit(liveStreams[this.focusedStreamIndex])"
     (search)="search.emit(liveStreams[focusedStreamIndex].cameraName)" (fullScreen)="fullScreen$.next()"
