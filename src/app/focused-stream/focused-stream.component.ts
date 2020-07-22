@@ -15,18 +15,19 @@ import { takeUntil, withLatestFrom } from 'rxjs/operators';
       transition(':enter', [
         style({
           maxHeight: '0px',
-          backgroundColor: 'blue'
+          opacity:0
         }),
         animate('500ms ease-in', 
         style({
-          maxHeight: '0px',
-          backgroundColor: 'blue'
+          maxHeight: '999px',
+          opacity:1
         }))
       ]),
       transition(':leave', [
         animate('500ms ease-in', 
         style({ 
           height: '0px',
+          opacity:0
         })
         )
       ])
@@ -86,18 +87,17 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
     })
 
     this.startStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
-      // In the future, this might ask to embed the 
-      //focusedStreamElem.play()
       this.isStreaming$.next(true)
     })
 
     this.stopStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      // in the future, this will swap out the live feed with an incrementally updated image
-      let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
-      //focusedStreamElem.pause();
       this.isStreaming$.next(false)
     })
+  }
+
+  closeStream() {
+    this.stopStream$.next()
+    this.close.emit()
   }
 
   ngOnDestroy(): void {
