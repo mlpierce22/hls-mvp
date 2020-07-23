@@ -41,6 +41,6 @@ export class StreamListComponent implements OnInit {
     });
   }
   trackByFn(index, item) {
-    return item; 
+    return item.manifestUrl; 
   }
 }
