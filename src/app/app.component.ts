@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ViewEncapsulation } from "@angular/core";
+import { Component, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from "@angular/core";
 import { Subject, Observable, BehaviorSubject, fromEvent, of, combineLatest, merge, interval, timer } from "rxjs";
 import {
   map,
@@ -22,44 +22,71 @@ import * as arrayMove from "array-move"
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class AppComponent implements OnDestroy {
-  width: number = 250;
-  height: number = 200;
 
-  /** Destroy observables so no leaks. */
-  unsubscribe$: Subject<void> = new Subject<void>();
+  // ------------ Public Facing Events ---------------
 
+  /** Event representing when a user starts fullscreen. */
+  @Output() fullScreen: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event representing when a user starts stream. */
+  @Output() startStream: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event representing when a user stops stream. */
+  @Output() stopStream: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event representing when a user shares a camera. */
+  @Output() shareCamera: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event representing when a user needs to search. */
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
+
+  /** Event representing when a user needs to search. */
+  @Output() editZones: EventEmitter<LiveStream> = new EventEmitter<LiveStream>();
+
+  /** Event representing when a user rewinds back 15 minutes. */
+  @Output() rewind: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event representing when a user clicks on the tags for a video (could be to select or unselect it). */
+  @Output() videoSelectionToggle: EventEmitter<LiveStream> = new EventEmitter<LiveStream>();
+
+  // ------------ Public Input Data ---------------
+
+  // ------------ Data Observables ---------------
   /** Partial LiveStream Object from backend */
   liveStreamData$: BehaviorSubject<Partial<LiveStream>[]> = new BehaviorSubject<Partial<LiveStream>[]>(null);
 
   /** Constructed LiveStream Object */
   liveStreams$: BehaviorSubject<LiveStream[]> = new BehaviorSubject<LiveStream[]>(null);
 
-  /** The live stream used to  */
+  /** The live stream that is in focus  */
   focusedStream$: BehaviorSubject<LiveStream> = new BehaviorSubject<LiveStream>(null);
 
-  /** The live stream used to  */
+  /** The live stream that is selected (with a tag) */
   selectedStreams$: BehaviorSubject<LiveStream[]> = new BehaviorSubject<LiveStream[]>(null);
 
-  /** The index of the selected Stream */
+  /** The index of the focused Stream */
   focusedStreamIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(
     null
   );
 
+  // ------------ Event (Manual) Observables ---------------
+  /** Event to handle when a user wants to edit a zone. */
   editZones$: Subject<LiveStream> = new Subject<LiveStream>();
 
-  /** Event to handle searching */
+  /** Event to handle when a user wants to search. */
   search$: Subject<string> = new Subject<string>();
 
-  /** Event to handle toggling a video select. */
+  /** Event to handle when a user wants to see the tags for a video. */
   toggleVideoSelect$: Subject<number> = new Subject<number>();
 
-  /** Event that handles the newly dropped stream. */
+  /** Event that handles the newly dropped stream (for drag and drop). */
   dropped$: Subject<Object> = new Subject<Object>();
 
-  /** Event that handles the newly dropped stream. */
+  /** Event that handles saving the position of the streams to local storage (every time the user drops it). */
   savePosition$: Subject<void> = new Subject<void>();
 
-  // --------------- OPTIONS ---------------
+  // ------------ Event (Automatic) Observables ---------------
+ 
   /** The size of the focused stream. */
   focusedStreamDim$: BehaviorSubject<VideoDimensions> = new BehaviorSubject<
     VideoDimensions
@@ -70,12 +97,46 @@ export class AppComponent implements OnDestroy {
     VideoDimensions
   >({ width: 456, height: 267 });
 
+  /** Destroy observables so no leaks. */
+  unsubscribe$: Subject<void> = new Subject<void>();
+
+  // ------------------- Functions -------------------
+  /** Adjust the display based on window width. */
+  adjustDisplay() {
+    const focusedWidth = window.innerWidth * 0.74;
+    const focusedHeight = focusedWidth * 0.56;
+    this.focusedStreamDim$.next({
+      width: focusedWidth,
+      height: focusedHeight,
+    });
+
+    if (window.innerWidth < 500) {
+      const listedWidth = window.innerWidth * 0.7;
+      const listedHeight = focusedWidth * 0.56;
+      this.listedStreamDim$.next({
+        width: listedWidth,
+        height: listedHeight,
+      });
+    }
+  }
+
+  // ------------------- Lifecycle -------------------
   constructor(public fss: FetchStreamService) {}
 
   ngOnInit(): void {
-
+    // Initially adjust the display so it's the right size for the user's screen.
     this.adjustDisplay();
 
+    // Then, dynamically adjust the display from now on
+    fromEvent(window, "resize")
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(() => {
+      this.adjustDisplay()
+    });
+
+    // ---------------------- DATA -------------------------
+
+    // Fetch the camera and metadata from the fetch service (happens once unless the data changes)
     this.fss.fetch().pipe(
       map((liveStreams) => {
         return liveStreams.map((metaData, index) => {
@@ -93,6 +154,7 @@ export class AppComponent implements OnDestroy {
       this.liveStreamData$.next(streamArray)
     });
 
+    // Builds a full stream object with an appropriate index and dispatches it onto the livestream stream
     combineLatest(this.liveStreamData$, this.selectedStreams$, this.focusedStream$)
     .pipe(
       takeUntil(this.unsubscribe$))
@@ -118,70 +180,74 @@ export class AppComponent implements OnDestroy {
       this.liveStreams$.next(updatedStream)
     })
 
+    // ---------------------- Events -------------------------
+
+    // some operation when the user asks to search (also allow parent to handle)
     this.search$.pipe(takeUntil(this.unsubscribe$)).subscribe((query) => {
-      console.log("searching the following query:", query);
+      this.search.emit(query)
     });
 
-    fromEvent(window, "resize")
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        this.adjustDisplay()
-      });
-
+    // Handle the selecting of the stream tags.
     this.toggleVideoSelect$
       .pipe(withLatestFrom(this.liveStreams$, this.selectedStreams$), takeUntil(this.unsubscribe$))
       .subscribe(([index, streams, selectedStreams]) => {
-
         let selectedStreamsCopy;
+        this.videoSelectionToggle.emit(streams[index])
+        // if the array is uninitialized, initialize it and push first selectedStream
         if (!selectedStreams) {
           let newArray = new Array<LiveStream>();
           newArray.push(streams[index])
           this.selectedStreams$.next(newArray)
+        // if array is empty, push first selected stream
         } else if (selectedStreams.length == 0) {
           selectedStreamsCopy = [...selectedStreams]
           selectedStreamsCopy.push(streams[index])
           this.selectedStreams$.next(selectedStreamsCopy)
+        // otherwise, make a copy and traverse selected streams
         } else {
           let location = null;
           selectedStreamsCopy = [...selectedStreams]
           selectedStreamsCopy.forEach((selStream, indx) => {
-            // if the stream is already in there, save where it is
+            // if the stream is already in the selected streams array, save where it is
             if (selStream.id == streams[index].id) {
               location = indx;
               return;
             } 
           })
-
+          // if the selected stream was in the array, then take it out.
           if (location !== null) {
             selectedStreamsCopy.splice(location, 1)
+          // otherwise, put it in.
           } else {
             selectedStreamsCopy.push(streams[index])
           }
+          // Update the selected streams observable with this new information
           this.selectedStreams$.next(selectedStreamsCopy)
         }
     });
 
+    // Handle when the user wants to edit the zones.
     this.editZones$.pipe(takeUntil(this.unsubscribe$))
     .subscribe((stream) => {
-      console.log("editing zones for the following camera:", stream.cameraName);
+      this.editZones.emit(stream)
     })
 
+    // Handle when the user drops the stream into a new position
     this.dropped$.pipe(
       withLatestFrom(this.liveStreams$), 
       takeUntil(this.unsubscribe$)
     ).subscribe(([ev, liveStream]) => {
       if (ev['type'] != "drop") {
-        console.log("moving from " + ev['oldIndex'] + " to " + ev['newIndex'])
         let newStream = arrayMove(liveStream, ev['oldIndex'], ev['newIndex'])
         newStream.forEach((stream, index) => {
             stream.currentIndex = index
         })
-        console.log("updated:", newStream)
         this.liveStreams$.next(newStream)
         this.savePosition$.next()
       }
     })
 
+    // Save the position of the videos to local storage.
     this.savePosition$.pipe(
       withLatestFrom(this.liveStreams$), 
       takeUntil(this.unsubscribe$)
@@ -196,23 +262,5 @@ export class AppComponent implements OnDestroy {
     //Called once, before the instance is destroyed.
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  adjustDisplay() {
-    const focusedWidth = window.innerWidth * 0.74;
-    const focusedHeight = focusedWidth * 0.56;
-    this.focusedStreamDim$.next({
-      width: focusedWidth,
-      height: focusedHeight,
-    });
-
-    if (window.innerWidth < 500) {
-      const listedWidth = window.innerWidth * 0.7;
-      const listedHeight = focusedWidth * 0.56;
-      this.listedStreamDim$.next({
-        width: listedWidth,
-        height: listedHeight,
-      });
-    }
   }
 }

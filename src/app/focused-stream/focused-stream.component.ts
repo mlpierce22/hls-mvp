@@ -51,7 +51,17 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
 
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-  @Output() editZones: EventEmitter<LiveStream> = new EventEmitter<LiveStream>()
+  @Output() editZones: EventEmitter<LiveStream> = new EventEmitter<LiveStream>();
+
+  @Output() fullScreen: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() startStream: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() stopStream: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() shareCamera: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() rewind: EventEmitter<void> = new EventEmitter<void>();
 
   startStream$: Subject<void> = new Subject<void>();
 
@@ -74,11 +84,13 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.shareCamera$.pipe(takeUntil(this.unsubscribe$)).subscribe(share => {
+      this.shareCamera.emit()
       console.log("show share", share)
     })
 
     this.fullScreen$.pipe(withLatestFrom(this.isStreaming$, this.videoRef$), takeUntil(this.unsubscribe$)).subscribe(([_, isStreaming, videoRef]) => {
       if (videoRef && isStreaming) {
+        this.fullScreen.emit()
         videoRef.nativeElement.requestFullscreen().catch(error => {
           console.warn("Failed to enter full screen because: ", error)
         })
@@ -87,10 +99,12 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
 
     this.startStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.isStreaming$.next(true)
+      this.startStream.emit()
     })
 
     this.stopStream$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.isStreaming$.next(false)
+      this.stopStream.emit()
     })
   }
 
