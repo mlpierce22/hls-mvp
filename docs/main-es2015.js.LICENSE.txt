@@ -1,10 +1,12 @@
+/*! For license information please see main-es2015.js.LICENSE.txt */
+
+/*! For license information please see polyfills-es5-es2015.js.LICENSE.txt */
+
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
  *
  * Copyright (c) 2016 Jorik Tangelder;
  * Licensed under the MIT license */
-
-/*! http://mths.be/endswith v0.2.0 by @mathias */
 
 /**
  * @license
@@ -54,4 +56,11 @@
  * @license Angular v8.2.14
  * (c) 2010-2019 Google LLC. https://angular.io/
  * License: MIT
+ */
+
+/**!
+ * Sortable 1.10.2
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @author	owenm    <owen23355@gmail.com>
+ * @license MIT
  */
