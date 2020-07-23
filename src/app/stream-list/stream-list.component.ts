@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LiveStream, VideoDimensions } from '../app.models';
 import Sortable from 'sortablejs';
 
@@ -39,7 +39,7 @@ export class StreamListComponent implements OnInit {
   // --------------------- FUNCTIONS ---------------------
 
   /** Allow angular to optimize ngFor. */
-  trackByFn(index, item) {
+  trackByFn(item) {
     return item.id; 
   }
   // --------------------- LIFECYCLE ---------------------

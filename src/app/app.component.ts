@@ -1,15 +1,9 @@
-import { Component, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from "@angular/core";
-import { Subject, Observable, BehaviorSubject, fromEvent, of, combineLatest, merge, interval, timer } from "rxjs";
+import { Component, OnDestroy, ViewEncapsulation, Output, EventEmitter } from "@angular/core";
+import { Subject, BehaviorSubject, fromEvent, combineLatest } from "rxjs";
 import {
   map,
   takeUntil,
   withLatestFrom,
-  distinctUntilChanged,
-  tap,
-  startWith,
-  pairwise,
-  take,
-  flatMap,
 } from "rxjs/operators";
 import { FetchStreamService } from "./fetch-stream.service";
 import { LiveStream, VideoDimensions } from "./app.models";

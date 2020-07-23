@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ElementRef } from '@angular/core';
 import { LiveStream, VideoDimensions } from '../app.models';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { trigger, transition, animate, style } from '@angular/animations'

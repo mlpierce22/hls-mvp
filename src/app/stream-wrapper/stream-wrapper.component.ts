@@ -8,11 +8,9 @@ import {
   ChangeDetectorRef,
   SimpleChanges,
   OnDestroy,
-  ViewChild,
   ElementRef,
 } from "@angular/core";
 import { LiveStream, VideoDimensions } from "../app.models";
-import Hls from "hls.js";
 import { takeUntil, flatMap, take } from 'rxjs/operators';
 import { Subject, timer, BehaviorSubject } from 'rxjs';
 import { FetchStreamService } from '../fetch-stream.service';
