@@ -1,9 +1,19 @@
 <div class="button-row">
-  <button [disabled]="!showPoster" [ngClass]="{'disable': !showPoster}" mat-stroked-button matTooltip="Open the live video stream connection to this camera." class="start-stream" (click)="startStream.emit()">Start Stream</button>
-  <button [disabled]="showPoster" [ngClass]="{'disable': showPoster}" mat-stroked-button matTooltip="Terminate the live video stream connection to this camera." class="stop-stream" (click)="stopStream.emit()">Stop Stream</button>
-  <button mat-stroked-button matTooltip="Edit zones of this camera." class="zones" (click)="editZones.emit()">Zones</button>
-  <button mat-stroked-button matTooltip="Search this camera's history." class="search" (click)="search.emit()"><img src="https://icongr.am/material/magnify.svg?size=20&color=000000"></button>
-  <button mat-stroked-button [disabled]="true" [ngClass]="{'disable': true}" class="settings" (click)="openSettings.emit()"><img src="https://icongr.am/material/cog.svg?size=20&color=000000"></button>
-  <button [disabled]="showPoster" [ngClass]="{'disable': showPoster}" mat-stroked-button matTooltip="Open full screen." class="full-screen" (click)="fullScreen.emit()"><img src="https://icongr.am/material/arrow-expand-all.svg?size=20&color=000000"></button>
-  <button mat-stroked-button matTooltip="Share this camera via link." class="share" (click)="shareCamera.emit()"><img src="https://icongr.am/entypo/share-alternative.svg?size=19&color=000000"></button>
+  <button [disabled]="!showPoster" [ngClass]="{'disable': !showPoster}" mat-stroked-button
+    matTooltip="Open the live video stream connection to this camera." class="start-stream"
+    (click)="startStream.emit()">Start Stream</button>
+  <button [disabled]="showPoster" [ngClass]="{'disable': showPoster}" mat-stroked-button
+    matTooltip="Terminate the live video stream connection to this camera." class="stop-stream"
+    (click)="stopStream.emit()">Stop Stream</button>
+  <button mat-stroked-button matTooltip="Edit zones of this camera." class="zones"
+    (click)="editZones.emit()">Zones</button>
+  <button mat-stroked-button matTooltip="Search this camera's history." class="search" (click)="search.emit()"><img
+      src="https://icongr.am/material/magnify.svg?size=20&color=000000"></button>
+  <button mat-stroked-button [disabled]="true" [ngClass]="{'disable': true}" class="settings"
+    (click)="openSettings.emit()"><img src="https://icongr.am/material/cog.svg?size=20&color=000000"></button>
+  <button [disabled]="showPoster" [ngClass]="{'disable': showPoster}" mat-stroked-button matTooltip="Open full screen."
+    class="full-screen" (click)="fullScreen.emit()"><img
+      src="https://icongr.am/material/arrow-expand-all.svg?size=20&color=000000"></button>
+  <button mat-stroked-button matTooltip="Share this camera via link." class="share" (click)="shareCamera.emit()"><img
+      src="https://icongr.am/entypo/share-alternative.svg?size=19&color=000000"></button>
 </div>

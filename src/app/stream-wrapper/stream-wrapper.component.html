@@ -1,5 +1,8 @@
 <div class="video-container" [ngClass]="{'show-border': showBorder}">
-  <camio-stream-component [stream]="stream" [streamDim]="streamDim" [posterUrl]="posterUrl$ | async" (focusVideo)="focusVideo.emit()" (showBorder)="showBorder = $event.detail" (hasErrored)="setErrorStatus($event.detail)" (elementRefInitialized)="setVideoElement($event.detail)"></camio-stream-component>
+  <camio-stream-component [stream]="stream" [streamDim]="streamDim" [posterUrl]="posterUrl$ | async"
+    (focusVideo)="focusVideo.emit()" (showBorder)="showBorder = $event.detail"
+    (hasErrored)="setErrorStatus($event.detail)" (elementRefInitialized)="setVideoElement($event.detail)">
+  </camio-stream-component>
   <div class="error-screen" *ngIf="hasErrored" [style.width.px]="streamDim.width" [style.height.px]="streamDim.height">
     <img src="https://icongr.am/material/video-off.svg?size=128&color=ff5252">
     <div class="text">
@@ -24,8 +27,9 @@
       </div>
     </div>
     <div class="time">{{ stream.timeStamp | date:'mediumTime'}}</div>
-    <button *ngIf="!showPoster" mat-icon-button matTooltip="Go back 15 minutes." class="rewind" (click)="rewindVideo()"><img
-        class="rewind-icon" src="https://icongr.am/fontawesome/history.svg?size=20&color=000000" /></button>
+    <button *ngIf="!showPoster" mat-icon-button matTooltip="Go back 15 minutes." class="rewind"
+      (click)="rewindVideo()"><img class="rewind-icon"
+        src="https://icongr.am/fontawesome/history.svg?size=20&color=000000" /></button>
     <button mat-icon-button class="checkbox" (click)="toggleVideoSelect.emit()" matTooltip="Select camera.">
       <img [src]="isTagSelected()">
     </button>
