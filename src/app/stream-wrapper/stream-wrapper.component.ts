@@ -8,6 +8,8 @@ import {
   ChangeDetectorRef,
   SimpleChanges,
   OnDestroy,
+  ViewChild,
+  ElementRef,
 } from "@angular/core";
 import { LiveStream, VideoDimensions } from "../app.models";
 import Hls from "hls.js";
@@ -41,9 +43,17 @@ export class StreamWrapperComponent implements OnInit, OnDestroy, OnChanges {
 
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output() videoError: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  @Output() videoRef: EventEmitter<ElementRef> = new EventEmitter<ElementRef>();
+
   isDropdown: boolean = false;
 
   showBorder: boolean = false;
+
+  hasErrored: boolean = false;
+
+  videoElement: HTMLVideoElement;
   
   posterUrl$: BehaviorSubject<string> =  new BehaviorSubject<string>("https://tinyurl.com/yxsyedbd")
 
@@ -65,7 +75,16 @@ export class StreamWrapperComponent implements OnInit, OnDestroy, OnChanges {
           this.posterUrl$.next(null);
         }
       })
-    
+  }
+
+  setErrorStatus(status) {
+    this.videoError.emit(status)
+    this.hasErrored = status
+  }
+
+  setVideoElement(videoEl) {
+    this.videoRef.emit(videoEl)
+    this.videoElement = videoEl.nativeElement
   }
 
   ngOnDestroy(): void {
@@ -110,13 +129,8 @@ export class StreamWrapperComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   rewindVideo() {
-    let video = document
-      .querySelector("camio-live-streams")
-      .shadowRoot.getElementById(
-        "live-stream-" + this.stream.id
-      ) as HTMLVideoElement;
-    let newTime = video.currentTime - 900 >= 0 ? video.currentTime - 900 : 0;
-    video.currentTime = newTime;
+    let newTime = this.videoElement.currentTime - 900 >= 0 ? this.videoElement.currentTime - 900 : 0;
+    this.videoElement.currentTime = newTime;
     this.rewind.emit();
   }
 

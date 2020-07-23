@@ -10,17 +10,21 @@
 
   ::ng-deep .mat-stroked-button {
     border-radius: 0px;
+
+    &.disable {
+      border: none;
+      background-color: rgba(0, 0, 0, 0.12);
+
+      img {
+        opacity: .26;
+      }
+    }
   }
 
   ::ng-deep .mat-raised-button {
     border-radius: 0px;
   }
-  .settings {
-    img {
-      opacity: .26;
-    }
-  }
-  
+
   img {
     margin-bottom: 4px;
   }

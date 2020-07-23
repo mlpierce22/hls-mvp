@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { LiveStream, VideoDimensions } from '../app.models';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { trigger, transition, animate, style } from '@angular/animations'
@@ -57,6 +57,8 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
 
   stopStream$: Subject<void> = new Subject<void>();
 
+  videoRef$: BehaviorSubject<ElementRef> = new  BehaviorSubject<ElementRef>(null);
+
   // For future: OpenSettings
 
   fullScreen$: Subject<void> = new Subject<void>();
@@ -75,14 +77,11 @@ export class FocusedStreamComponent implements OnInit, OnDestroy {
       console.log("show share", share)
     })
 
-    this.fullScreen$.pipe(withLatestFrom(this.isStreaming$), takeUntil(this.unsubscribe$)).subscribe(([_, isStreaming]) => {
-      let focusedStreamElem = document.querySelector("camio-live-streams").shadowRoot.getElementById("live-stream-" + this.liveStreams[this.focusedStreamIndex].id) as HTMLVideoElement;
-      
-      if (focusedStreamElem && isStreaming) {
-        focusedStreamElem.requestFullscreen().catch(error => {
+    this.fullScreen$.pipe(withLatestFrom(this.isStreaming$, this.videoRef$), takeUntil(this.unsubscribe$)).subscribe(([_, isStreaming, videoRef]) => {
+      if (videoRef && isStreaming) {
+        videoRef.nativeElement.requestFullscreen().catch(error => {
           console.warn("Failed to enter full screen because: ", error)
         })
-
       }
     })
 

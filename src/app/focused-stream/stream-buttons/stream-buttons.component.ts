@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-stream-buttons',
@@ -6,6 +6,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./stream-buttons.component.scss']
 })
 export class StreamButtonsComponent implements OnInit {
+
+  @Input() showPoster: boolean
 
   @Output() startStream: EventEmitter<void> = new EventEmitter<void>();
 
