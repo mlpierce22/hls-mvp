@@ -1,0 +1,41 @@
+.live-tiles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: white;
+
+  .video-container {
+    margin: 0 1px;
+    display: flex;
+    position: relative;
+
+    .dragger {
+      cursor: move;
+      cursor: -webkit-grabbing;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #ffffff88;
+      border-radius: 50%;
+    }
+  }
+}
+
+.ghost {
+  opacity: 0.4;
+  background-color: white;
+}
+
+.chosen {
+  background: #ccc;
+  border: dotted 3px #999;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media only screen and (max-width: 952px) {
+  .live-tiles {
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,17 +1,10 @@
-
 <div class="app-container">
-  <div class="intro">Sample MVP app for camio to test HLS streaming</div>
-  <div class="button-container">
-    <button class="add-new" (click)="addStream()">Add Random Stream</button>
-    <button class="delete-selected" (click)="deleteStreams()">Delete Selected Streams</button>
-  </div>
-
-  <div class="live-tiles">
-    <div class="video-container" *ngFor="let stream of liveStreams; index as i">
-      <video class="video" (click)="toggleHighlight(i)" [ngClass]="{'selected': stream.selected}"id="live-stream-{{stream.id}}" [style.height.px]="height" [style.width.px]="width" autoPlay>
-      </video>
-      <div class="selected" (click)="toggleHighlight(stream.id)" *ngIf="stream.selected">
-      </div>
-    </div>
-  </div>
-</div> 
+  <app-focused-stream [liveStreams]="liveStreams$ | async" [focusedStreamIndex]="(focusedStreamIndex$ | async)"
+    [focusedStreamDim]="focusedStreamDim$ | async" (search)="search$.next($event)"
+    (toggleVideoSelect)="toggleVideoSelect$.next($event)" (close)="focusedStreamIndex$.next(null)"
+    (editZones)="editZones$.next($event)" (fullScreen)="fullScreen.emit()" (startStream)="startStream.emit()"
+    (stopStream)="stopStream.emit()" (shareCamera)="shareCamera.emit()" (rewind)="rewind.emit()"></app-focused-stream>
+  <app-stream-list [liveStreams]="liveStreams$ | async" [listedStreamDim]="listedStreamDim$ | async"
+    (focusVideo)="focusedStreamIndex$.next($event)" (search)="search$.next($event)"
+    (toggleVideoSelect)="toggleVideoSelect$.next($event)" (drop)="dropped$.next($event)"></app-stream-list>
+</div>
