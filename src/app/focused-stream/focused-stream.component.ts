@@ -10,7 +10,7 @@ import { takeUntil, withLatestFrom } from 'rxjs/operators';
   templateUrl: './focused-stream.component.html',
   styleUrls: ['./focused-stream.component.scss'],
   animations: [
-    // Maybe these animations will work in the future: https://github.com/angular/angular/issues/25672
+    // These animations have a monkey patch in main.ts: https://github.com/angular/angular/issues/25672
     trigger('slideInOut', [
       transition(':enter', [
         style({
