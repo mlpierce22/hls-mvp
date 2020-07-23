@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "el-build": "npm run el-build-task && npm run el-package-task",
-    "el-build-task": "ng build --prod --output-hashing=none",
+    "el-build-task": "ng build --prod",
     "el-package-task": "cat ./docs/{polyfills-es5,runtime-es5,main-es5,scripts}.js > ./elements/camio-live-streams.js"
   },
   "private": true,
