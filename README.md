@@ -1,4 +1,7 @@
 # Camio Stream Web Component
+## Live Demo
+
+https://mlpierce22.github.io/hls-mvp/
 
 ## Installation
 ### In Angular:
