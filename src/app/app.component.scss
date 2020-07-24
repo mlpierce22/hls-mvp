@@ -25,28 +25,28 @@ $camio-hls-mvp-theme: mat-light-theme($camio-hls-mvp-primary, $camio-hls-mvp-acc
 // that you are using.
 @include angular-material-theme($camio-hls-mvp-theme);
 
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
-body {
-  margin: 0;
-}
 .mat-tooltip {
   font-size: 13px;
 }
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
+// // html,
+// // body {
+// //   height: 100%;
+// // }
+// body {
+//   margin: 0;
+  
+// }
 
-:host {
-  margin: 0;
+// :host {
+//   margin: 0;
   .app-container {
     display: flex;
+    font-family: 'Open Sans', sans-serif;
     flex-direction: column;
     align-items: center;
     font-size: 14px;
-  }
+ // }
 }
