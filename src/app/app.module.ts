@@ -9,8 +9,9 @@ import { FocusedStreamComponent } from './focused-stream/focused-stream.componen
 import { StreamButtonsComponent } from './focused-stream/stream-buttons/stream-buttons.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { TooltipModule, TooltipOptions } from 'ng2-tooltip-directive';
 import { StreamWrapperComponent } from './stream-wrapper/stream-wrapper.component';
+import { Defaults } from './tooltip.config';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { StreamWrapperComponent } from './stream-wrapper/stream-wrapper.componen
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatTooltipModule
+    TooltipModule.forRoot(Defaults as TooltipOptions),
   ],
   providers: [],
   entryComponents: [AppComponent],

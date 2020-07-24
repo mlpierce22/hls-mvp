@@ -10,8 +10,8 @@
     </div>
     <button mat-raised-button (click)="setErrorStatus(false)">Show Images</button>
   </div>
-  <button mat-icon-button *ngIf="canClose" matTooltip="Close video." class="close" (click)="close.emit()"
-    matTooltip="Close video.">
+  <button mat-icon-button *ngIf="canClose" tooltip="Close video." class="close" (click)="close.emit()"
+    tooltip="Close video.">
     <img src="https://icongr.am/material/close.svg?size=40&color=f67c0e">
   </button>
   <div class="bottom-metadata">
@@ -19,7 +19,7 @@
       {{ stream.online ? 'Online' : 'Offline' }}
     </div>
     <div class="dropdown-container" id="dropdown-container-{{stream.id}}">
-      <button mat-stroked-button matTooltip="Search by camera or camera label." [matTooltipDisabled]="isDropdown"
+      <button mat-stroked-button tooltip="Search by camera or camera label." [display]="isDropdown"
         class="dropdown-btn" (click)="toggleDropdown()">{{ stream.cameraName }}</button>
       <div class="dropdown" [ngClass]="{'show': isDropdown }">
         <div class="dropdown-option" (click)="search.emit(stream.cameraName)">{{ stream.cameraName }}</div>
@@ -27,10 +27,10 @@
       </div>
     </div>
     <div class="time">{{ stream.timeStamp | date:'mediumTime'}}</div>
-    <button *ngIf="!showPoster" mat-icon-button matTooltip="Go back 15 minutes." class="rewind"
+    <button *ngIf="!showPoster" mat-icon-button tooltip="Go back 15 minutes." class="rewind"
       (click)="rewindVideo()"><img class="rewind-icon"
         src="https://icongr.am/fontawesome/history.svg?size=20&color=000000" /></button>
-    <button mat-icon-button class="checkbox" (click)="toggleVideoSelect.emit()" matTooltip="Select camera.">
+    <button mat-icon-button class="checkbox" (click)="toggleVideoSelect.emit()" tooltip="Select camera.">
       <img [src]="isTagSelected()">
     </button>
   </div>
