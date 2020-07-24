@@ -8,9 +8,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "el-build": "npm run el-build-task && npm run el-package-task",
+    "el-build": "npm run el-deps-task && npm run el-build-task && npm run el-package-task",
     "el-build-task": "ng build --prod",
-    "el-package-task": "cat ./docs/{polyfills-es5,runtime-es5,main-es5,scripts}.js > ./elements/camio-live-streams.js"
+    "el-package-task": "cat ./docs/{polyfills-es2015,runtime-es2015,main-es2015,styles-es2015,scripts}.js > ./elements/camio-live-streams.js",
+    "el-deps-task": "curl https://raw.githubusercontent.com/CamioCam/camio-stream-component/master/elements/camio-stream.js > ./elements/camio-stream.js"
   },
   "private": true,
   "dependencies": {
