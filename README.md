@@ -6,7 +6,7 @@ https://mlpierce22.github.io/hls-mvp/
 ## Installation
 ### In Angular:
 1. Add `schemas: [CUSTOM_ELEMENTS_SCHEMA]` into `app.module.ts` of the app you want to import into.
-2. In `main.ts` add an import statement. It would be the same as embedding a script from an external source. For example, if I wanted something like `<script type='text/javascript' src="Desktop/custom-component.js"></script>`, then I would write this import into the main.ts: `import "Desktop/custom-component.js"`. It is still unclear to me if this can fetch from an external source like a script could (will figure out).
+2. In `main.ts` add an import statement. I recommend downloading the camio-live-stream.js file at this link and placing it into a local folder. For example, if I wanted something like `<script type='text/javascript' src="./camio-live-streams.js"></script>`, then I would run something like `curl https://raw.githubusercontent.com/CamioCam/camio-stream-component/master/elements/camio-live-streams.js > ./elements/camio-live-streams.js` write this import into the main.ts: `import "../elements/camio-live-streams.js"`.
 3. Using the tag name that you declared for the custom component, just embed it where you want it in the app as if it was a regular component. Eg. in this case: `<camio-live-streams></camio-live-streams>`
 
 ### In Javascript and HTML:
@@ -17,25 +17,13 @@ https://mlpierce22.github.io/hls-mvp/
 ```
 ...
 <body>
-  <camio-live-streams thisInput="ourVariable"></camio-live-streams>
-  
-  <script type="text/javascript" src="path/to/camio-live-streams.js"></script>
+  <camio-live-streams></camio-live-streams>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@master/elements/camio-live-streams.js"></script>
   <script>
     // Javascript code for registering event listeners (see Javascript: Outputs below)
   </script>
 </body>
 ```
-
-
-## The Life-Cycle of Web Components:
-- `connectedCallback`: Invoked each time the custom element is appended into a document-connected element. This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
-**Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.**
-- `disconnectedCallback`: Invoked each time the custom element is disconnected from the document's DOM.
-- `adoptedCallback`: Invoked each time the custom element is moved to a new document.
-- `attributeChangedCallback`: Invoked each time one of the custom element's attributes is added, removed, or changed. Which attributes to notice change for is specified in a static get observedAttributes method
-
-source: [Mozilla](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements)
-
 
 ## Handling Input/Output events
 ### In Angular:
@@ -58,22 +46,21 @@ var componentNeedsThis = "important words"
 ```
 
 #### Outputs:
-Unlike inputs, the outputs don't need to be declared in the html, instead they should be handled in a seperate script within the `connectedCallback()` function (so that we can actually catch the events) by registering an event listener (on the shadow dom I think?).
+Unlike inputs, the outputs don't need to be declared in the html, instead they should be handled in a seperate script tag (so that we can actually catch the events) by registering an event listener on the component itself.
 
-**Note: This needs to be tested, syntax may be slightly off.**
 Some sample code to make this more clear:
 ```
 <camio-live-streams></camio-live-streams>
 <script>
-connectedCallback(){
-  ...
-  this.shadowRoot.addEventListener("outputTitle", function (event) {
+  var camioStream = document.querySelector("camio-live-streams")
+  camioStream.addEventListener("outputTitle", function (event) {
     ...
     // Do stuff with event that will happen when outputTitle fires
     ...
-    });
+  });
 }
 </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@master/elements/camio-live-streams.js"></script>
 ```
 
 ## Schema for this web component (WIP):
