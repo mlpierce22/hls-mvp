@@ -232,12 +232,12 @@ export class AppComponent implements OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe(([ev, liveStream]) => {
       if (ev['type'] != "drop") {
-        //console.log("Moving index " + ev['oldIndex'] + " to " + ev['newIndex'] + " in ", liveStream)
+        console.log("Moving index " + ev['oldIndex'] + " to " + ev['newIndex'] + " in ", liveStream)
         let newStream = arrayMove(liveStream, ev['oldIndex'], ev['newIndex'])
         newStream.forEach((stream, index) => {
             stream.currentIndex = index
         })
-        //console.log("Moved " + ev['newIndex'], newStream)
+        console.log("Moved to" + ev['newIndex'], newStream)
         this.savePosition$.next(newStream)
         this.liveStreams$.next(newStream)
         // If the stream is focused, we also have to update the focused position
@@ -264,7 +264,7 @@ export class AppComponent implements OnDestroy {
         takeUntil(this.unsubscribe$),
         withLatestFrom(this.liveStreams$))
       .subscribe(([index, liveStream]) => {
-        //console.log("updated focused! to ", index)
+        console.log("updated focused! to ", index)
         if (index != null) {
         this.focusedStream$.next(liveStream[index])
         } else {
