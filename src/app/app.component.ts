@@ -77,7 +77,7 @@ export class AppComponent implements OnDestroy {
   dropped$: Subject<Object> = new Subject<Object>();
 
   /** Event that handles saving the position of the streams to local storage (every time the user drops it). */
-  savePosition$: Subject<void> = new Subject<void>();
+  savePosition$: Subject<LiveStream[]> = new Subject<LiveStream[]>();
 
   // ------------ Event (Automatic) Observables ---------------
  
@@ -158,7 +158,6 @@ export class AppComponent implements OnDestroy {
         let streamObj: LiveStream;
         if (savedStream) {
            streamObj = JSON.parse(savedStream)
-           localStorage.removeItem(stream.id.toString())
         }
         return {
           manifestUrl: stream.manifestUrl,
@@ -233,24 +232,46 @@ export class AppComponent implements OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe(([ev, liveStream]) => {
       if (ev['type'] != "drop") {
+        //console.log("Moving index " + ev['oldIndex'] + " to " + ev['newIndex'] + " in ", liveStream)
         let newStream = arrayMove(liveStream, ev['oldIndex'], ev['newIndex'])
         newStream.forEach((stream, index) => {
             stream.currentIndex = index
         })
+        //console.log("Moved " + ev['newIndex'], newStream)
+        this.savePosition$.next(newStream)
         this.liveStreams$.next(newStream)
-        this.savePosition$.next()
+        // If the stream is focused, we also have to update the focused position
+        newStream.forEach((stream, index) => {
+          if (stream.isFocused) {
+            this.focusedStreamIndex$.next(index)
+          }
+        })
       }
     })
 
     // Save the position of the videos to local storage.
     this.savePosition$.pipe(
-      withLatestFrom(this.liveStreams$), 
       takeUntil(this.unsubscribe$)
-      ).subscribe(([_,liveStreams]) => {
+      ).subscribe((liveStreams) => {
+        localStorage.clear()
         liveStreams.forEach(stream => {
           localStorage.setItem(stream.id.toString(), JSON.stringify(stream));
         })
       });
+
+      // Every time the stream index is updated, update the livestream
+      this.focusedStreamIndex$.pipe(
+        takeUntil(this.unsubscribe$),
+        withLatestFrom(this.liveStreams$))
+      .subscribe(([index, liveStream]) => {
+        //console.log("updated focused! to ", index)
+        if (index != null) {
+        this.focusedStream$.next(liveStream[index])
+        } else {
+          this.focusedStream$.next(null)
+        }
+      })
+
   }
 
   ngOnDestroy(): void {
