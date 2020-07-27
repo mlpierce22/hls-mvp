@@ -39,8 +39,8 @@ export class StreamListComponent implements OnInit {
   // --------------------- FUNCTIONS ---------------------
 
   /** Allow angular to optimize ngFor. */
-  trackByFn(item) {
-    return item.id; 
+  trackByFn(index, item) {
+    return index + item.id; 
   }
   // --------------------- LIFECYCLE ---------------------
   constructor() { }

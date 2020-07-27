@@ -158,6 +158,7 @@ export class AppComponent implements OnDestroy {
         let streamObj: LiveStream;
         if (savedStream) {
            streamObj = JSON.parse(savedStream)
+           localStorage.removeItem(stream.id.toString())
         }
         return {
           manifestUrl: stream.manifestUrl,
