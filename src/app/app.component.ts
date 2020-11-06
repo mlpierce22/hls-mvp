@@ -231,8 +231,7 @@ export class AppComponent implements OnDestroy {
       withLatestFrom(this.liveStreams$), 
       takeUntil(this.unsubscribe$)
     ).subscribe(([ev, liveStream]) => {
-      if (ev['type'] != "drop") {
-        console.log("Moving index " + ev['oldIndex'] + " to " + ev['newIndex'] + " in ", liveStream)
+      if (ev['type'] == "end") {
         let newStream = arrayMove(liveStream, ev['oldIndex'], ev['newIndex'])
         newStream.forEach((stream, index) => {
             stream.currentIndex = index

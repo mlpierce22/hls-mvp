@@ -1,7 +1,7 @@
 <div class="live-tiles" id="streamList">
   <div class="video-container stream-id-{{stream.currentIndex}}"
     *ngFor="let stream of liveStreams; index as i; trackBy: trackByFn" (mouseenter)="showDragger[i]=true"
-    (mouseleave)="showDragger[i]=false">
+    (mouseleave)="showDragger[i]=false" [id]="stream.id">
     <app-stream-wrapper [stream]="stream" [streamDim]="listedStreamDim" [isSelected]="stream.isSelected"
       [showPoster]="'true'" (focusVideo)="focusVideo.emit(i)"
       (toggleVideoSelect)="toggleVideoSelect.emit(i)" (search)="search.emit($event)">
