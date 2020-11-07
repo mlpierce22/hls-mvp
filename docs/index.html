@@ -6,7 +6,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@latest/elements/camio-live-streams.js"></script>
   <camio-live-streams></camio-live-streams>
-  <script type="text/javascript" src="./camio-live-streams.js"></script>
-</body>
+  <script>
+    // define a config
+     let streamConfig = [
+      {
+        manifestUrl: "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
+        online: true,
+        cameraName: "Long Tail Video - Captions",
+        timeStamp: Date.now(),
+        labels: ['HQ', 'San Mateo', 'Work'],
+      },
+      {
+        manifestUrl: "https://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8",
+        online: true,
+        cameraName: "Long Tail Video - Captions",
+        timeStamp: Date.now(),
+        labels: ['HQ', 'San Mateo', 'Work'],
+      },
+      {
+        manifestUrl: "https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8",
+        online: true,
+        cameraName: "Long Tail Video - Oceans",
+        timeStamp: Date.now(),
+        labels: ['HQ', 'San Mateo', 'Work'],
+      },
+      {
+        manifestUrl: "https://b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest(format=m3u8-aapl-v3)",
+        online: true,
+        cameraName: "Azure Edge",
+        timeStamp: Date.now(),
+        labels: ['HQ', 'San Mateo', 'Work'],
+      },
+    ]
+ 
+     const liveStream = document.querySelector("camio-live-streams");
+     if (liveStream) {
+       liveStream.setAttribute("streams", JSON.stringify(streamConfig));
+     }
+
+     // Event listeners
+     liveStream.addEventListener("fullScreen", (event) => {
+        console.log("Going full screen!", event)
+     })
+     liveStream.addEventListener("startStream", (event) => {
+        console.log("Starting the stream!", event)
+     })
+     liveStream.addEventListener("stopStream", (event) => {
+        console.log("Stopping the stream!", event)
+     })
+     liveStream.addEventListener("shareCamera", (event) => {
+        console.log("Sharing the camera!", event)
+     })
+     liveStream.addEventListener("search", (event) => {
+        console.log("Searching!", event.detail)
+     })
+     liveStream.addEventListener("editZones", (event) => {
+        console.log("Editing Zones!", event.detail)
+     })
+     liveStream.addEventListener("rewind", (event) => {
+        console.log("Rewinding!", event)
+     })
+     liveStream.addEventListener("videoSelectionToggle", (event) => {
+        console.log("Toggling a video!", event.detail)
+     })
+  </script>
+  </body>
 </html>
