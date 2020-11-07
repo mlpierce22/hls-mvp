@@ -35,13 +35,27 @@ Follow the normal Angular syntax unless you need the payload of an event. That i
 
 ### In Javascript:
 #### Inputs:
-`<camio-live-streams inputTitle="componentNeedsThis"></camio-live-streams>` would take our local variable `componentNeedsThis` and gives it to the web component as an input variable called `inputTitle`.
+Place an empty stream tag `<camio-live-streams></camio-live-streams>`, and set an attribute in a script tag below it. **Note**: the attribute has to match that of the possible inputs (see Schema Inputs below)
 
 Some sample code to make this more clear:
 ```
-<camio-live-streams inputTitle="componentNeedsThis"></camio-live-streams>
+<camio-live-streams></camio-live-streams>
 <script>
-var componentNeedsThis = "important words"
+  // define a config
+  let streamConfig = [
+    {
+      manifestUrl: "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
+      online: true,
+      cameraName: "Long Tail Video - Captions",
+      timeStamp: Date.now(),
+      labels: ['HQ', 'San Mateo', 'Work'],
+    }
+  ]
+  // Add the attribute to the stream
+  const liveStream = document.querySelector("camio-live-streams");
+  if (liveStream) {
+    liveStream.setAttribute("streams", JSON.stringify(streamConfig));
+  }
 </script>
 ```
 
@@ -65,7 +79,11 @@ Some sample code to make this more clear:
 
 ## Schema for this web component (WIP):
 ### Inputs
-*There are currently no inputs. Some ideas for inputs: an api key, a config for the video element (show/hide controls, volume, etc), share camera url?*
+- *streams*
+  - Payload: Array<>
+  - Triggered: When the user clicks the fullscreen button.
+  - Description: Makes the video component full screen.
+*Some ideas for inputs: an api key, a config for the video element (show/hide controls, volume, etc), share camera url?*
 
 ### Outputs
 - *fullScreen*
@@ -109,6 +127,15 @@ Some sample code to make this more clear:
   - Description: Allows the user to see the camera's tags and select multiple cameras.
 
 ### Models
+```
+InputStream: {
+  manifestUrl: string, // The url to the *.m3u8 file
+  online: boolean, // The online/offline state of the camera
+  cameraName: string, // The name of the camera
+  timeStamp: Date, // the time of the camera (eg. it's 5pm where the camera is located)
+  labels: Array<string>, // the labels associated with this camera.
+},
+```
 ```
 LiveStream {
   id: number; // Unique identifier

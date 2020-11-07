@@ -1,10 +1,10 @@
-<div class="app-container">
-  <app-focused-stream [liveStreams]="liveStreams$ | async" [focusedStreamIndex]="(focusedStreamIndex$ | async)"
+<div class="app-container" *ngIf="(liveStreams$ | async) as liveStreams">
+  <app-focused-stream [liveStreams]="liveStreams" [focusedStreamIndex]="(focusedStreamIndex$ | async)"
     [focusedStreamDim]="focusedStreamDim$ | async" (search)="search$.next($event)"
     (toggleVideoSelect)="toggleVideoSelect$.next($event)" (close)="focusedStreamIndex$.next(null)"
     (editZones)="editZones$.next($event)" (fullScreen)="fullScreen.emit()" (startStream)="startStream.emit()"
     (stopStream)="stopStream.emit()" (shareCamera)="shareCamera.emit()" (rewind)="rewind.emit()"></app-focused-stream>
-  <app-stream-list [liveStreams]="liveStreams$ | async" [listedStreamDim]="listedStreamDim$ | async"
+  <app-stream-list [liveStreams]="liveStreams" [listedStreamDim]="listedStreamDim$ | async"
     (focusVideo)="focusedStreamIndex$.next($event)" (search)="search$.next($event)"
     (toggleVideoSelect)="toggleVideoSelect$.next($event)" (drop)="dropped$.next($event)"></app-stream-list>
 </div>

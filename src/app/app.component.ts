@@ -60,6 +60,7 @@ export class AppComponent implements OnDestroy {
           id: index,
         };
       });
+      //console.log("adding streams", liveStreams)
       this.liveStreamData$.next(liveStreams)
    }
   }
@@ -172,6 +173,7 @@ export class AppComponent implements OnDestroy {
     .pipe(
       takeUntil(this.unsubscribe$))
     .subscribe(([liveStreamData, selected, focused]) => {
+      if (liveStreamData) {
       let updatedStream: LiveStream[] = liveStreamData.map((stream, index) => {
         let savedStream = localStorage.getItem(stream.id.toString())
         let streamObj: LiveStream;
@@ -191,6 +193,9 @@ export class AppComponent implements OnDestroy {
         }
       }).sort((a, b) => a.currentIndex - b.currentIndex)
       this.liveStreams$.next(updatedStream)
+    } else {
+      //console.log("no data")
+    }
     })
 
     // ---------------------- Events -------------------------
@@ -255,7 +260,7 @@ export class AppComponent implements OnDestroy {
         newStream.forEach((stream, index) => {
             stream.currentIndex = index
         })
-        console.log("Moved to" + ev['newIndex'], newStream)
+        //console.log("Moved to" + ev['newIndex'], newStream)
         this.savePosition$.next(newStream)
         this.liveStreams$.next(newStream)
         // If the stream is focused, we also have to update the focused position
@@ -282,7 +287,7 @@ export class AppComponent implements OnDestroy {
         takeUntil(this.unsubscribe$),
         withLatestFrom(this.liveStreams$))
       .subscribe(([index, liveStream]) => {
-        console.log("updated focused! to ", index)
+        //console.log("updated focused! to ", index)
         if (index != null) {
         this.focusedStream$.next(liveStream[index])
         } else {

@@ -5,13 +5,11 @@
   <title>CamioHlsMvp</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@master/elements/camio-live-streams.js"></script> -->
-  <!-- <script type="text/javascript" src="/Users/masonpierce/Desktop/hls-mvp/elements/camio-live-streams.js"></script> -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@master/elements/camio-live-streams.js"></script>
   <camio-live-streams></camio-live-streams>
   <script>
     // define a config
@@ -51,47 +49,5 @@
        liveStream.setAttribute("streams", JSON.stringify(streamConfig));
      }
    </script>
-  <!-- <camio-live-streams id="camio-live-streams" liveStreams=""></camio-live-streams>
-  <script>
-    // const liveStreamsEl = document.createElement("camio-live-streams")
-    
-    let ls = [
-      {
-        manifestUrl: "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8",
-        online: true,
-        cameraName: "Long Tail Video - Captions",
-        timeStamp: Date.now(),
-        labels: ['HQ', 'San Mateo', 'Work'],
-      },
-      {
-        manifestUrl: "https://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8",
-        online: true,
-        cameraName: "Long Tail Video - Captions",
-        timeStamp: Date.now(),
-        labels: ['HQ', 'San Mateo', 'Work'],
-      },
-      {
-        manifestUrl: "https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8",
-        online: true,
-        cameraName: "Long Tail Video - Oceans",
-        timeStamp: Date.now(),
-        labels: ['HQ', 'San Mateo', 'Work'],
-      },
-      {
-        manifestUrl: "https://b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest(format=m3u8-aapl-v3)",
-        online: true,
-        cameraName: "Azure Edge",
-        timeStamp: Date.now(),
-        labels: ['HQ', 'San Mateo', 'Work'],
-      },
-    ]
-    //liveStreamsEl.setAttribute("liveStreams", JSON.stringify(ls))
-    
-    const cls = document.querySelector("camio-live-streams")
-    cls.setAttribute("liveStreams", "test")
-    //console.log(cls.liveStreams)
-    //cls.replaceWith(liveStreamsEl)
-    //JSON.stringify(liveStreams)
-  </script> -->
-</body>
+  </body>
 </html>
