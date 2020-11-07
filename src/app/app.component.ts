@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewEncapsulation, Output, EventEmitter } from "@angular/core";
+import { Component, OnDestroy, ViewEncapsulation, Output, EventEmitter, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { Subject, BehaviorSubject, fromEvent, combineLatest } from "rxjs";
 import {
   map,
@@ -44,6 +44,25 @@ export class AppComponent implements OnDestroy {
   @Output() videoSelectionToggle: EventEmitter<LiveStream> = new EventEmitter<LiveStream>();
 
   // ------------ Public Input Data ---------------
+
+  /** Fetches the event from the  */
+  @Input('streams') set liveStreamArray(init: string) {
+    if (init) {
+      const fromString = JSON.parse(init);
+      // TODO: maybe we don't need this if it comes with a unique identifier.
+      const liveStreams = fromString.map((metaData, index) => {
+        return {
+          manifestUrl: metaData.manifestUrl,
+          online: metaData.online,
+          cameraName: metaData.cameraName,
+          timeStamp: metaData.timeStamp,
+          labels: metaData.labels,
+          id: index,
+        };
+      });
+      this.liveStreamData$.next(liveStreams)
+   }
+  }
 
   // ------------ Data Observables ---------------
   /** Partial LiveStream Object from backend */
@@ -131,22 +150,22 @@ export class AppComponent implements OnDestroy {
     // ---------------------- DATA -------------------------
 
     // Fetch the camera and metadata from the fetch service (happens once unless the data changes)
-    this.fss.fetch().pipe(
-      map((liveStreams) => {
-        return liveStreams.map((metaData, index) => {
-          return {
-            manifestUrl: metaData.manifestUrl,
-            online: metaData.online,
-            cameraName: metaData.cameraName,
-            timeStamp: metaData.timeStamp,
-            labels: metaData.labels,
-            id: index,
-          };
-        });
-      }),
-    ).subscribe(streamArray => {
-      this.liveStreamData$.next(streamArray)
-    });
+    // this.fss.fetch().pipe(
+    //   map((liveStreams) => {
+    //     return liveStreams.map((metaData, index) => {
+    //       return {
+    //         manifestUrl: metaData.manifestUrl,
+    //         online: metaData.online,
+    //         cameraName: metaData.cameraName,
+    //         timeStamp: metaData.timeStamp,
+    //         labels: metaData.labels,
+    //         id: index,
+    //       };
+    //     });
+    //   }),
+    // ).subscribe(streamArray => {
+    //   this.liveStreamData$.next(streamArray)
+    // });
 
     // Builds a full stream object with an appropriate index and dispatches it onto the livestream stream
     combineLatest(this.liveStreamData$, this.selectedStreams$, this.focusedStream$)
