@@ -74,13 +74,13 @@ Some sample code to make this more clear:
   });
 }
 </script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@master/elements/camio-live-streams.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/hls-mvp@latest/elements/camio-live-streams.js"></script>
 ```
 
 ## Schema for this web component (WIP):
 ### Inputs
 - *streams*
-  - Payload: Array<>
+  - Payload: Array<InputStream>
   - Triggered: When the user clicks the fullscreen button.
   - Description: Makes the video component full screen.
 *Some ideas for inputs: an api key, a config for the video element (show/hide controls, volume, etc), share camera url?*
